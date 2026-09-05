@@ -1,0 +1,22 @@
+    // 🟢 วาง URL Web App (doGet) ที่คุณคัดลอกมาจากขั้นตอนที่ 1 ที่นี่
+    const API_URL = "https://script.google.com/macros/s/AKfycbxISnAKEgPGFoFgXtCDN28gNS_C-yObAQSSblMVp7oVDmSP8wLSLTGm1eVtLhY3OGEt6A/exec"; 
+
+    window.onload = function() {
+      fetchData();
+    };
+
+    function fetchData() {
+      document.getElementById('loading').classList.remove('hidden');
+      document.getElementById('cards-container').classList.add('hidden');
+      document.getElementById('no-data').classList.add('hidden');
+
+      // ดึงข้อมูลผ่าน Web API ตรงจาก Google Sheets
+      fetch(API_URL)
+        .then(res => res.json())
+        .then(data => {
+          onDataLoaded(data);
+        })
+        .catch(err => {
+          onError(err);
+        });
+    }
