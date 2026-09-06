@@ -2,7 +2,6 @@
 <html lang="th">
 <head>
   <meta charset="UTF-8">
-  <!-- 🟢 เพิ่มแท็กสำคัญที่สุดเพื่อให้แสดงผลบนมือถือสวยงามพอดีหน้าจอ 100% -->
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>UNSAFE KILLER REPORT</title>
   <script src="https://cdn.tailwindcss.com"></script>
@@ -27,13 +26,13 @@
           <i data-lucide="shield-check" class="w-8 h-8 text-emerald-300"></i>
         </div>
         <div>
-          <h1 class="text-2xl sm:text-3xl font-extrabold tracking-tight">UNSAFE KILLER REPORT</h1>
+          <h1 class="text-2xl sm:text-3.5xl font-extrabold tracking-tight">UNSAFE KILLER REPORT</h1>
           <p class="text-xs sm:text-sm text-emerald-200 mt-1">ระบบติดตามและสรุปผลการแก้ไขความปลอดภัยคลังสินค้า Site 7</p>
         </div>
       </div>
       
-      <!-- ปุ่มส่งรายงาน Unsafe Killer ปรับปรุงขนาดให้พอดีบนมือถือ -->
-      <a href="https://docs.google.com/forms/d/e/1FAIpQLSeNtolMsyl3p9KFoM0DiQ5fZcLOrDRxII3IKkEVq_fXdAm8VA/viewform?usp=dialog" target="_blank" rel="noopener noreferrer" class="w-full md:w-auto flex items-center justify-center gap-2 bg-gradient-to-r from-amber-500 to-orange-600 hover:from-amber-600 hover:to-orange-700 text-white px-6 py-3 rounded-xl text-sm sm:text-base font-bold transition shadow-md border border-amber-300/40">
+      <!-- ปุ่มส่งรายงาน Unsafe Killer -->
+      <a href="https://docs.google.com/forms/d/e/1FAIpQLSeNtolMsyl3p9KFoM0DiQ5fZcLOrDRxII3IKkEVq_fXdAm8VA/viewform?usp=dialog" target="_blank" rel="noopener noreferrer" class="w-full md:w-auto flex items-center justify-center gap-2 bg-gradient-to-r from-amber-500 to-orange-600 hover:from-amber-600 hover:to-orange-700 text-white px-6 py-3 rounded-xl text-base font-bold transition shadow-md border border-amber-300/40">
         <i data-lucide="plus-circle" class="w-5 h-5"></i>
         <span>+ ส่งรายงาน Unsafe Killer</span>
       </a>
@@ -43,7 +42,7 @@
   <!-- Main Content -->
   <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-6">
 
-    <!-- KPI Summary Bar (ปรับปรุงให้แสดงผล 1 คอลัมน์บนมือถือ และ 3 คอลัมน์บนจอใหญ่) -->
+    <!-- KPI Summary Bar -->
     <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
       <div class="bg-white p-5 rounded-2xl shadow-sm border border-slate-200 flex items-center gap-4">
         <div class="p-3.5 bg-emerald-50 text-emerald-600 rounded-xl"><i data-lucide="clipboard-list" class="w-7 h-7"></i></div>
@@ -68,7 +67,7 @@
       </div>
     </div>
 
-    <!-- Search & Location Filter (ปรับปรุงให้สอดคล้องบนมือถือ) -->
+    <!-- Search & Location Filter -->
     <div class="bg-white p-5 rounded-2xl shadow-sm border border-slate-200 mb-6 flex flex-col md:flex-row gap-4 justify-between items-center">
       <div class="relative w-full md:w-96">
         <i data-lucide="search" class="w-4.5 h-4.5 text-slate-400 absolute left-4 top-1/2 -translate-y-1/2"></i>
@@ -194,7 +193,7 @@
         const beforeImgHtml = r.beforeImg 
           ? `<div class="relative group cursor-pointer" onclick="openModal('${r.beforeImg}')">
                <img src="${r.beforeImg}" loading="lazy" class="w-full h-44 object-cover rounded-xl bg-slate-100 border border-slate-200 img-card">
-               <span class="absolute top-2 left-2 bg-rose-600/90 text-white text-[10px] font-semibold px-2.5 py-0.5 rounded-md shadow">ก่อนแก้ไข</span>
+               <span class="absolute top-2 left-2 bg-rose-600/90 text-white text-[10px] font-semibold px-2 py-0.5 rounded-md shadow">ก่อนแก้ไข</span>
                <div class="absolute inset-0 bg-black/20 opacity-0 group-hover:opacity-100 rounded-xl flex items-center justify-center transition"><i data-lucide="zoom-in" class="w-5 h-5 text-white"></i></div>
              </div>`
           : `<div class="w-full h-44 bg-slate-100 rounded-xl border border-dashed border-slate-300 flex flex-col items-center justify-center text-slate-400 text-xs gap-1">
@@ -204,13 +203,14 @@
         const afterImgHtml = r.afterImg 
           ? `<div class="relative group cursor-pointer" onclick="openModal('${r.afterImg}')">
                <img src="${r.afterImg}" loading="lazy" class="w-full h-44 object-cover rounded-xl bg-slate-100 border border-slate-200 img-card">
-               <span class="absolute top-2 left-2 bg-emerald-600/90 text-white text-[10px] font-semibold px-2.5 py-0.5 rounded-md shadow">หลังแก้ไข</span>
+               <span class="absolute top-2 left-2 bg-emerald-600/90 text-white text-[10px] font-semibold px-2 py-0.5 rounded-md shadow">หลังแก้ไข</span>
                <div class="absolute inset-0 bg-black/20 opacity-0 group-hover:opacity-100 rounded-xl flex items-center justify-center transition"><i data-lucide="zoom-in" class="w-5 h-5 text-white"></i></div>
              </div>`
           : `<div class="w-full h-44 bg-slate-100 rounded-xl border border-dashed border-slate-300 flex flex-col items-center justify-center text-slate-400 text-xs gap-1">
                <i data-lucide="image-off" class="w-6 h-6"></i><span>ไม่มีรูปหลังแก้ไข</span>
              </div>`;
 
+        // 🟢 เพิ่มขนาดฟอนต์ตรงส่วนประกอบต่างๆ (เช่น text-base และ text-sm) เพื่อให้เห็นชัดเต็มตาบนมือถือ
         card.innerHTML = `
           <div class="p-5 flex-1">
             <!-- Card Header -->
@@ -220,31 +220,31 @@
                   ${r.sender.charAt(0)}
                 </div>
                 <div>
-                  <h4 class="text-base font-bold text-slate-800">${r.sender}</h4>
-                  <p class="text-xs text-slate-400 flex items-center gap-1">
+                  <h4 class="text-base sm:text-lg font-extrabold text-slate-800">${r.sender}</h4>
+                  <p class="text-xs sm:text-sm text-slate-400 flex items-center gap-1 mt-0.5">
                     <i data-lucide="map-pin" class="w-3.5 h-3.5 text-emerald-600"></i> ${r.location}
                   </p>
                 </div>
               </div>
-              <span class="text-xs font-bold bg-emerald-50 text-emerald-700 px-3 py-1.5 rounded-lg border border-emerald-200/60">
+              <span class="text-xs sm:text-sm font-bold bg-emerald-50 text-emerald-700 px-3 py-1.5 rounded-lg border border-emerald-200/60">
                 #เคสที่ ${r.id}
               </span>
             </div>
 
             <!-- Problem & Fix Section -->
-            <div class="space-y-3 mb-4 text-sm">
+            <div class="space-y-4 mb-4">
               <div class="p-4 bg-rose-50/60 rounded-xl border border-rose-100">
                 <span class="font-extrabold text-rose-700 block mb-1.5 flex items-center gap-1.5 text-sm sm:text-base">
-                  <i data-lucide="alert-triangle" class="w-4 h-4"></i> ปัญหาที่พบ:
+                  <i data-lucide="alert-triangle" class="w-4.5 h-4.5"></i> ปัญหาที่พบ:
                 </span>
-                <p class="text-slate-700 leading-relaxed text-xs sm:text-sm">${r.problem}</p>
+                <p class="text-sm sm:text-base text-slate-700 leading-relaxed font-normal">${r.problem}</p>
               </div>
 
               <div class="p-4 bg-emerald-50/60 rounded-xl border border-emerald-100">
                 <span class="font-extrabold text-emerald-700 block mb-1.5 flex items-center gap-1.5 text-sm sm:text-base">
-                  <i data-lucide="check-circle" class="w-4 h-4"></i> วิธีการแก้ไข:
+                  <i data-lucide="check-circle" class="w-4.5 h-4.5"></i> วิธีการแก้ไข:
                 </span>
-                <p class="text-slate-700 leading-relaxed text-xs sm:text-sm">${r.fixMethod}</p>
+                <p class="text-sm sm:text-base text-slate-700 leading-relaxed font-normal">${r.fixMethod}</p>
               </div>
             </div>
 
