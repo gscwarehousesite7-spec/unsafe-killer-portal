@@ -13,12 +13,27 @@
     body { font-family: 'Prompt', sans-serif; }
     .img-card { transition: transform 0.2s ease-in-out; }
     .img-card:hover { transform: scale(1.02); }
+    /* Custom Scrollbar สำหรับกล่องกราฟ */
+    .custom-scroll::-webkit-scrollbar {
+      width: 6px;
+    }
+    .custom-scroll::-webkit-scrollbar-track {
+      background: #f1f5f9;
+      border-radius: 8px;
+    }
+    .custom-scroll::-webkit-scrollbar-thumb {
+      background: #cbd5e1;
+      border-radius: 8px;
+    }
+    .custom-scroll::-webkit-scrollbar-thumb:hover {
+      background: #94a3b8;
+    }
   </style>
 </head>
 <body class="bg-slate-100 min-h-screen text-slate-800 pb-16">
   <!-- Top Decorative Line -->
   <div class="h-1.5 w-full bg-gradient-to-r from-emerald-500 via-teal-600 to-orange-500"></div>
-  
+
   <!-- Top Navbar -->
   <header class="bg-gradient-to-r from-emerald-800 via-teal-800 to-slate-900 text-white shadow-md">
     <div class="max-w-7xl mx-auto px-4 py-5 sm:px-6 lg:px-8 flex flex-col md:flex-row justify-between items-center gap-4">
@@ -31,7 +46,6 @@
           <p class="text-xs sm:text-sm text-emerald-200 mt-1">ระบบติดตามและสรุปผลการแก้ไขความปลอดภัยคลังสินค้า Site 7</p>
         </div>
       </div>
-
       <!-- ปุ่มส่งรายงาน Unsafe Killer -->
       <a href="https://docs.google.com/forms/d/e/1FAIpQLSeNtolMsyl3p9KFoM0DiQ5fZcLOrDRxII3IKkEVq_fXdAm8VA/viewform?usp=dialog" target="_blank" rel="noopener noreferrer" class="w-full md:w-auto flex items-center justify-center gap-2 bg-gradient-to-r from-amber-500 to-orange-600 hover:from-amber-600 hover:to-orange-700 text-white px-6 py-3 rounded-xl text-base font-bold transition shadow-md border border-amber-300/40">
         <i data-lucide="plus-circle" class="w-5 h-5"></i>
@@ -43,7 +57,7 @@
   <!-- Main Content -->
   <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-6">
 
-    <!-- 🟢 Section กราฟการมีส่วนร่วม (Top Safety Contributors) -->
+    <!-- 🟢 Section กราฟการมีส่วนร่วม (Top Safety Contributors) ครบทุกคน -->
     <div class="bg-white p-5 rounded-2xl shadow-sm border border-slate-200 mb-6">
       <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-4">
         <div class="flex items-center gap-3">
@@ -51,11 +65,11 @@
             <i data-lucide="trophy" class="w-6 h-6"></i>
           </div>
           <div>
-            <h2 class="text-base sm:text-lg font-bold text-slate-800">สถิติการมีส่วนร่วมสูงสุด (Top Safety Contributors)</h2>
-            <p class="text-xs text-slate-400">พนักงานที่มีส่วนร่วมในการชี้บ่งและกำจัดจุดเสี่ยง</p>
+            <h2 class="text-base sm:text-lg font-bold text-slate-800">สถิติการมีส่วนร่วมรายบุคคล (Safety Contributors Leaderboard)</h2>
+            <p class="text-xs text-slate-400">แสดงลำดับพนักงานทุกคนที่มีส่วนร่วมในการชี้บ่งและกำจัดจุดเสี่ยง</p>
           </div>
         </div>
-        
+
         <!-- ปุ่มสลับดูยอด -->
         <div class="flex items-center bg-slate-100 p-1 rounded-xl text-xs font-semibold self-start sm:self-auto border border-slate-200">
           <button id="btn-total" onclick="switchMode('total')" class="px-3.5 py-1.5 rounded-lg bg-emerald-600 text-white shadow-sm transition">ยอดรวมสะสม</button>
@@ -63,8 +77,11 @@
         </div>
       </div>
 
-      <div class="relative w-full h-64 sm:h-72">
-        <canvas id="engagementChart"></canvas>
+      <!-- กล่องกราฟปรับเป็นความสูงคงที่พร้อม Scrollbar เลื่อนดูทุกคนได้สบายตา -->
+      <div class="relative w-full h-[450px] overflow-y-auto custom-scroll pr-2">
+        <div id="chart-wrapper" class="w-full">
+          <canvas id="engagementChart"></canvas>
+        </div>
       </div>
     </div>
 
@@ -136,7 +153,7 @@
   <script>
     // URL Web App จาก API ของพี่เบิร์ด
     const API_URL = "https://script.google.com/macros/s/AKfycbyf6bqIkoQQLyfI7kAOukHFHREtg3QOF9Fnk5qJs0ygEAa-NkI_Svp0ujr3ErWUFRTQdA/exec";
-    
+
     let allReports = [];
     let engagementData = [];
     let myChart = null;
@@ -150,11 +167,10 @@
       document.getElementById('loading').classList.remove('hidden');
       document.getElementById('cards-container').classList.add('hidden');
       document.getElementById('no-data').classList.add('hidden');
-      
+
       fetch(API_URL)
         .then(res => res.json())
         .then(res => {
-          // รองรับทั้งแบบโครงสร้างใหม่ {reports, engagement} และแบบ Array เดิม
           if (Array.isArray(res)) {
             allReports = res;
           } else {
@@ -176,16 +192,22 @@
       lucide.createIcons();
     }
 
+    // 🟢 วาดกราฟแนวนอน แสดงรายชื่อทุกคนครบ 100%
     function renderChart() {
       if (!engagementData || engagementData.length === 0) return;
 
+      // จัดเรียงลำดับตามโหมดที่เลือก (ยอดรวมสะสม หรือ ยอดเดือนนี้)
       let sorted = [...engagementData].sort((a, b) => {
         return currentMode === 'total' ? (b.total - a.total) : (b.thisMonth - a.thisMonth);
       });
 
-      let topData = sorted.slice(0, 8); // โชว์ Top 8 อันดับ
-      let labels = topData.map(d => d.name);
-      let values = topData.map(d => currentMode === 'total' ? d.total : d.thisMonth);
+      let labels = sorted.map(d => d.name);
+      let values = sorted.map(d => currentMode === 'total' ? d.total : d.thisMonth);
+
+      // คำนวณความสูงตามจำนวนคน (คนละ 28px) เพื่อให้แถวไม่เบียดกัน
+      const chartWrapper = document.getElementById('chart-wrapper');
+      const dynamicHeight = Math.max(450, labels.length * 28);
+      chartWrapper.style.height = dynamicHeight + "px";
 
       const ctx = document.getElementById('engagementChart').getContext('2d');
       if (myChart) myChart.destroy();
@@ -200,24 +222,36 @@
             backgroundColor: currentMode === 'total' ? 'rgba(16, 185, 129, 0.85)' : 'rgba(14, 165, 233, 0.85)',
             borderColor: currentMode === 'total' ? '#059669' : '#0284c7',
             borderWidth: 1.5,
-            borderRadius: 8,
-            maxBarThickness: 36
+            borderRadius: 6,
+            maxBarThickness: 18
           }]
         },
         options: {
+          indexAxis: 'y', // แนวนอน แสดงชื่อได้เต็มตา
           responsive: true,
           maintainAspectRatio: false,
           plugins: {
-            legend: { display: false }
+            legend: { display: false },
+            tooltip: {
+              callbacks: {
+                label: function(context) {
+                  return ' ' + context.parsed.x + ' ครั้ง';
+                }
+              }
+            }
           },
           scales: {
-            y: {
+            x: {
               beginAtZero: true,
               ticks: { precision: 0, font: { family: 'Prompt' } },
-              grid: { color: '#f1f5f9' }
+              grid: { color: '#f1f5f9' },
+              position: 'top' // แสดงตัวเลขสเกลไว้ด้านบนเพื่อดูง่าย
             },
-            x: {
-              ticks: { font: { family: 'Prompt', size: 11 } },
+            y: {
+              ticks: { 
+                font: { family: 'Prompt', size: 12, weight: '500' },
+                autoSkip: false
+              },
               grid: { display: false }
             }
           }
@@ -229,7 +263,6 @@
       currentMode = mode;
       const btnTotal = document.getElementById('btn-total');
       const btnMonth = document.getElementById('btn-month');
-
       if (mode === 'total') {
         btnTotal.className = "px-3.5 py-1.5 rounded-lg bg-emerald-600 text-white shadow-sm transition";
         btnMonth.className = "px-3.5 py-1.5 rounded-lg text-slate-600 hover:text-slate-900 transition";
@@ -247,18 +280,14 @@
 
     function updateSummaryAndFilters() {
       document.getElementById('stat-total').innerText = allReports.length;
-
       const locations = new Set();
       const senders = new Set();
-
       allReports.forEach(r => {
         if (r.location && r.location !== "ไม่ระบุพื้นที่") locations.add(r.location);
         if (r.sender && r.sender !== "ไม่ระบุชื่อ") senders.add(r.sender);
       });
-
       document.getElementById('stat-locations').innerText = locations.size;
       document.getElementById('stat-senders').innerText = (engagementData.length || senders.size);
-
       const select = document.getElementById('location-filter');
       select.innerHTML = '<option value="ALL">ทั้งหมดทุกพื้นที่</option>';
       locations.forEach(loc => {
@@ -272,9 +301,7 @@
     function renderCards(reports) {
       const container = document.getElementById('cards-container');
       const noData = document.getElementById('no-data');
-
       container.innerHTML = '';
-
       if (!reports || reports.length === 0) {
         container.classList.add('hidden');
         noData.classList.remove('hidden');
@@ -282,7 +309,6 @@
       }
       container.classList.remove('hidden');
       noData.classList.add('hidden');
-
       reports.forEach(r => {
         const card = document.createElement('div');
         card.className = "bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden flex flex-col justify-between animate-fade-in";
@@ -304,7 +330,6 @@
           : `<div class="w-full h-44 bg-slate-100 rounded-xl border border-dashed border-slate-300 flex flex-col items-center justify-center text-slate-400 text-xs gap-1">
                <i data-lucide="image-off" class="w-6 h-6"></i><span>ไม่มีรูปหลังแก้ไข</span>
              </div>`;
-
         card.innerHTML = `
           <div class="p-5 flex-1">
             <div class="flex items-start justify-between gap-2 mb-3 pb-3 border-b border-slate-100">
