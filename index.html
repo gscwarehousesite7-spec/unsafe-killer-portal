@@ -7,27 +7,16 @@
   <script src="https://cdn.tailwindcss.com"></script>
   <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;600;700&display=swap" rel="stylesheet">
   <script src="https://unpkg.com/lucide@latest"></script>
-  <!-- เพิ่ม Chart.js สำหรับวาดกราฟการมีส่วนร่วม -->
+  <!-- Chart.js สำหรับวาดกราฟ -->
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <style>
     body { font-family: 'Prompt', sans-serif; }
     .img-card { transition: transform 0.2s ease-in-out; }
     .img-card:hover { transform: scale(1.02); }
-    /* Custom Scrollbar สำหรับกล่องกราฟ */
-    .custom-scroll::-webkit-scrollbar {
-      width: 6px;
-    }
-    .custom-scroll::-webkit-scrollbar-track {
-      background: #f1f5f9;
-      border-radius: 8px;
-    }
-    .custom-scroll::-webkit-scrollbar-thumb {
-      background: #cbd5e1;
-      border-radius: 8px;
-    }
-    .custom-scroll::-webkit-scrollbar-thumb:hover {
-      background: #94a3b8;
-    }
+    .custom-scroll::-webkit-scrollbar { width: 6px; }
+    .custom-scroll::-webkit-scrollbar-track { background: #f1f5f9; border-radius: 8px; }
+    .custom-scroll::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 8px; }
+    .custom-scroll::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
   </style>
 </head>
 <body class="bg-slate-100 min-h-screen text-slate-800 pb-16">
@@ -42,7 +31,13 @@
           <i data-lucide="shield-check" class="w-8 h-8 text-emerald-300"></i>
         </div>
         <div>
-          <h1 class="text-2xl sm:text-3.5xl font-extrabold tracking-tight">UNSAFE KILLER REPORT</h1>
+          <div class="flex items-center justify-center md:justify-start gap-2 flex-wrap">
+            <h1 class="text-2xl sm:text-3.5xl font-extrabold tracking-tight">UNSAFE KILLER REPORT</h1>
+            <!-- 🟢 ป้ายหัวข้อประจำเดือน -->
+            <span id="month-badge" class="bg-emerald-500/30 border border-emerald-400/40 text-emerald-200 text-xs font-semibold px-2.5 py-1 rounded-full">
+              ประจำเดือนล่าสุด
+            </span>
+          </div>
           <p class="text-xs sm:text-sm text-emerald-200 mt-1">ระบบติดตามและสรุปผลการแก้ไขความปลอดภัยคลังสินค้า Site 7</p>
         </div>
       </div>
@@ -57,8 +52,30 @@
   <!-- Main Content -->
   <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-6">
 
-    <!-- 🟢 Section กราฟการมีส่วนร่วม (Top Safety Contributors) ครบทุกคน -->
-    <div class="bg-white p-5 rounded-2xl shadow-sm border border-slate-200 mb-6">
+    <!-- 🟢 แถบหัวข้อประจำเดือน + ปุ่มกดเปิดดูสถิติ (Default ปิดไว้) -->
+    <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 mb-4 bg-white p-4 rounded-2xl border border-slate-200 shadow-sm">
+      <div class="flex items-center gap-2.5">
+        <div class="p-2 bg-emerald-50 text-emerald-700 rounded-xl">
+          <i data-lucide="calendar-check" class="w-5 h-5"></i>
+        </div>
+        <div>
+          <h2 class="text-sm sm:text-base font-bold text-slate-800">
+            UNSAFE KILLER <span id="current-month-title" class="text-emerald-700">ประจำเดือน</span>
+          </h2>
+          <p class="text-xs text-slate-400">ภาพรวมการแก้ไขและสถิติการมีส่วนร่วมของพนักงาน</p>
+        </div>
+      </div>
+
+      <!-- ปุ่ม Toggle เปิด/ปิด กราฟ (Default ซ่อนไว้) -->
+      <button id="toggle-chart-btn" onclick="toggleChartSection()" class="flex items-center gap-2 bg-slate-100 hover:bg-slate-200 text-slate-700 px-4 py-2 rounded-xl text-xs sm:text-sm font-semibold transition border border-slate-200">
+        <i data-lucide="bar-chart-3" class="w-4 h-4 text-emerald-600"></i>
+        <span id="toggle-btn-text">📊 ดูสถิติการมีส่วนร่วม</span>
+        <i data-lucide="chevron-down" id="toggle-icon" class="w-4 h-4 transition-transform duration-200"></i>
+      </button>
+    </div>
+
+    <!-- 🟢 Section กราฟการมีส่วนร่วม (ซ่อนเป็น Default โดยคลาส hidden) -->
+    <div id="chart-section" class="bg-white p-5 rounded-2xl shadow-sm border border-slate-200 mb-6 hidden transition-all duration-300">
       <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-4">
         <div class="flex items-center gap-3">
           <div class="p-2 bg-emerald-100 text-emerald-700 rounded-xl">
@@ -77,7 +94,7 @@
         </div>
       </div>
 
-      <!-- กล่องกราฟปรับเป็นความสูงคงที่พร้อม Scrollbar เลื่อนดูทุกคนได้สบายตา -->
+      <!-- กล่องกราฟปรับเป็นความสูงคงที่พร้อม Scrollbar -->
       <div class="relative w-full h-[450px] overflow-y-auto custom-scroll pr-2">
         <div id="chart-wrapper" class="w-full">
           <canvas id="engagementChart"></canvas>
@@ -90,7 +107,7 @@
       <div class="bg-white p-5 rounded-2xl shadow-sm border border-slate-200 flex items-center gap-4">
         <div class="p-3.5 bg-emerald-50 text-emerald-600 rounded-xl"><i data-lucide="clipboard-list" class="w-7 h-7"></i></div>
         <div>
-          <p class="text-xs text-slate-400 font-bold uppercase tracking-wider">รายการเดือนล่าสุด</p>
+          <p class="text-xs text-slate-400 font-bold uppercase tracking-wider">รายการประจำเดือน</p>
           <h3 id="stat-total" class="text-3xl font-extrabold text-slate-800 mt-0.5">-</h3>
         </div>
       </div>
@@ -158,10 +175,31 @@
     let engagementData = [];
     let myChart = null;
     let currentMode = 'total';
+    let isChartVisible = false;
+
+    // รายชื่อเดือนภาษาไทย
+    const thaiMonths = [
+      "มกราคม", "กุมภาพันธ์", "มีนาคม", "เมษายน", "พฤษภาคม", "มิถุนายน",
+      "กรกฎาคม", "สิงหาคม", "กันยายน", "ตุลาคม", "พฤศจิกายน", "ธันวาคม"
+    ];
 
     window.onload = function() {
+      setMonthHeader();
       fetchData();
     };
+
+    function setMonthHeader() {
+      const now = new Date();
+      const monthName = thaiMonths[now.getMonth()];
+      const yearName = now.getFullYear() + 543;
+      const fullMonthText = `ประจำเดือน ${monthName} ${yearName}`;
+
+      const titleEl = document.getElementById('current-month-title');
+      if (titleEl) titleEl.innerText = fullMonthText;
+
+      const badgeEl = document.getElementById('month-badge');
+      if (badgeEl) badgeEl.innerText = `${monthName} ${yearName}`;
+    }
 
     function fetchData() {
       document.getElementById('loading').classList.remove('hidden');
@@ -188,15 +226,32 @@
       document.getElementById('loading').classList.add('hidden');
       updateSummaryAndFilters();
       renderCards(allReports);
-      renderChart();
       lucide.createIcons();
     }
 
-    // 🟢 วาดกราฟแนวนอน แสดงรายชื่อทุกคนครบ 100%
+    // ฟังก์ชันเปิด/ปิด Section กราฟ
+    function toggleChartSection() {
+      const section = document.getElementById('chart-section');
+      const btnText = document.getElementById('toggle-btn-text');
+      const icon = document.getElementById('toggle-icon');
+
+      isChartVisible = !isChartVisible;
+
+      if (isChartVisible) {
+        section.classList.remove('hidden');
+        btnText.innerText = "❌ ซ่อนสถิติการมีส่วนร่วม";
+        icon.classList.add('rotate-180');
+        renderChart(); // วาดกราฟเมื่อกดเปิด
+      } else {
+        section.classList.add('hidden');
+        btnText.innerText = "📊 ดูสถิติการมีส่วนร่วม";
+        icon.classList.remove('rotate-180');
+      }
+    }
+
     function renderChart() {
       if (!engagementData || engagementData.length === 0) return;
 
-      // จัดเรียงลำดับตามโหมดที่เลือก (ยอดรวมสะสม หรือ ยอดเดือนนี้)
       let sorted = [...engagementData].sort((a, b) => {
         return currentMode === 'total' ? (b.total - a.total) : (b.thisMonth - a.thisMonth);
       });
@@ -204,7 +259,6 @@
       let labels = sorted.map(d => d.name);
       let values = sorted.map(d => currentMode === 'total' ? d.total : d.thisMonth);
 
-      // คำนวณความสูงตามจำนวนคน (คนละ 28px) เพื่อให้แถวไม่เบียดกัน
       const chartWrapper = document.getElementById('chart-wrapper');
       const dynamicHeight = Math.max(450, labels.length * 28);
       chartWrapper.style.height = dynamicHeight + "px";
@@ -227,7 +281,7 @@
           }]
         },
         options: {
-          indexAxis: 'y', // แนวนอน แสดงชื่อได้เต็มตา
+          indexAxis: 'y',
           responsive: true,
           maintainAspectRatio: false,
           plugins: {
@@ -245,7 +299,7 @@
               beginAtZero: true,
               ticks: { precision: 0, font: { family: 'Prompt' } },
               grid: { color: '#f1f5f9' },
-              position: 'top' // แสดงตัวเลขสเกลไว้ด้านบนเพื่อดูง่าย
+              position: 'top'
             },
             y: {
               ticks: { 
