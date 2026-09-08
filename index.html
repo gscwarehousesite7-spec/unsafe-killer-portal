@@ -7,7 +7,6 @@
   <script src="https://cdn.tailwindcss.com"></script>
   <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;600;700&display=swap" rel="stylesheet">
   <script src="https://unpkg.com/lucide@latest"></script>
-  <!-- Chart.js สำหรับทำกราฟสวยๆ -->
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <style>
     body { font-family: 'Prompt', sans-serif; -webkit-tap-highlight-color: transparent; }
@@ -39,7 +38,7 @@
   <!-- Main Content -->
   <main class="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 mt-4 sm:mt-6 space-y-4">
 
-    <!-- Section: กราฟสถิติการมีส่วนร่วม (Participation Chart) -->
+    <!-- Section: กราฟสถิติการมีส่วนร่วม -->
     <div class="bg-white p-4 sm:p-5 rounded-2xl shadow-sm border border-slate-200">
       <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-4">
         <div class="flex items-center gap-2.5">
@@ -48,18 +47,16 @@
           </div>
           <div>
             <h2 class="text-sm sm:text-base font-bold text-slate-800">สถิติการมีส่วนร่วมสูงสุด (Top Safety Contributors)</h2>
-            <p class="text-[11px] text-slate-500">พนักงานที่มีส่วนร่วมในการชี้บ่งและกำจัดจุดเสี่ยง</p>
+            <p class="text-[11px] text-slate-500">พนักงานที่มีส่วนร่วมในการชี้บ่งและแก้ไขจุดเสี่ยง</p>
           </div>
         </div>
         
-        <!-- ปุ่มสลับดูกราฟ: ยอดสะสมทั้งหมด / ยอดเดือนนี้ -->
         <div class="flex items-center bg-slate-100 p-1 rounded-xl text-xs font-medium self-start sm:self-auto border border-slate-200">
           <button id="btn-view-total" onclick="switchChartMode('total')" class="px-3 py-1.5 rounded-lg bg-emerald-600 text-white shadow-sm transition">ยอดรวมทั้งหมด</button>
           <button id="btn-view-month" onclick="switchChartMode('month')" class="px-3 py-1.5 rounded-lg text-slate-600 hover:text-slate-900 transition">เฉพาะเดือนนี้</button>
         </div>
       </div>
 
-      <!-- พื้นที่วาดกราฟ Chart.js -->
       <div class="relative w-full h-64 sm:h-72">
         <canvas id="engagementChart"></canvas>
       </div>
@@ -134,6 +131,12 @@
   </div>
 
   <script>
+    // =========================================================================
+    // 🔴 จุดที่ต้องใส่ URL: วาง Web App URL ที่ได้จาก Apps Script ที่นี่เลยครับ!
+    // =========================================================================
+    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxuFaA8kXhadO1aRj0UF51P1fViD17BCFx76tyG9VytDX-Y4oFsE3-PmsIjUUWVflqiuw/exec";
+    // ตัวอย่างเช่น: const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbx.../exec";
+
     let allReports = [];
     let rawEngagementData = [];
     let myChart = null;
@@ -143,7 +146,7 @@
       fetchAllData();
     };
 
-    function fetchAllData() {
+    async function fetchAllData() {
       document.getElementById('loading').classList.remove('hidden');
       document.getElementById('cards-container').classList.add('hidden');
       document.getElementById('no-data').classList.add('hidden');
@@ -151,48 +154,35 @@
       const icon = document.getElementById('refresh-icon');
       if (icon) icon.classList.add('animate-spin');
 
-      // 1. ดึงข้อมูลเคส
-      google.script.run
-        .withSuccessHandler(onReportsLoaded)
-        .withFailureHandler(onError)
-        .getReportData();
+      try {
+        // 1. ดึงข้อมูลรายการเคส
+        const resReports = await fetch(SCRIPT_URL + "?action=getReports");
+        allReports = await resReports.json();
 
-      // 2. ดึงข้อมูลกราฟการมีส่วนร่วม
-      google.script.run
-        .withSuccessHandler(onEngagementLoaded)
-        .getEngagementChartData();
+        // 2. ดึงข้อมูลสถิติการมีส่วนร่วม
+        const resEngagement = await fetch(SCRIPT_URL + "?action=getEngagement");
+        rawEngagementData = await resEngagement.json();
+
+        updateSummaryAndFilters();
+        renderCards(allReports);
+        renderChart();
+      } catch (err) {
+        console.error(err);
+        alert("ไม่สามารถดึงข้อมูลได้ กรุณาตรวจสอบว่าใส่ Web App URL ถูกต้องและตั้งค่าสิทธิ์เป็น Anyone แล้วหรือไม่");
+      } finally {
+        if (icon) icon.classList.remove('animate-spin');
+        document.getElementById('loading').classList.add('hidden');
+        lucide.createIcons();
+      }
     }
 
-    function onReportsLoaded(data) {
-      allReports = data || [];
-      updateSummaryAndFilters();
-      renderCards(allReports);
-      checkLoadingDone();
-    }
-
-    function onEngagementLoaded(data) {
-      rawEngagementData = data || [];
-      renderChart();
-      checkLoadingDone();
-    }
-
-    function checkLoadingDone() {
-      const icon = document.getElementById('refresh-icon');
-      if (icon) icon.classList.remove('animate-spin');
-      document.getElementById('loading').classList.add('hidden');
-      lucide.createIcons();
-    }
-
-    // ฟังก์ชันวาดกราฟ Top 10
     function renderChart() {
       if (!rawEngagementData || rawEngagementData.length === 0) return;
 
-      // จัดเรียงตามโหมดที่เลือก (ยอดรวม หรือ ยอดเดือนนี้)
       let sorted = [...rawEngagementData].sort((a, b) => {
         return currentChartMode === 'total' ? (b.total - a.total) : (b.thisMonth - a.thisMonth);
       });
 
-      // ดึง Top 8 คนแรกมาแสดงผล
       let topData = sorted.slice(0, 8);
       let labels = topData.map(d => d.name);
       let values = topData.map(d => currentChartMode === 'total' ? d.total : d.thisMonth);
@@ -263,11 +253,6 @@
       }
 
       renderChart();
-    }
-
-    function onError(err) {
-      alert("เกิดข้อผิดพลาดในการโหลดข้อมูล: " + err);
-      document.getElementById('loading').classList.add('hidden');
     }
 
     function updateSummaryAndFilters() {
