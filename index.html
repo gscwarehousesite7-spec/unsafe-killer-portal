@@ -7,7 +7,6 @@
   <script src="https://cdn.tailwindcss.com"></script>
   <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;600;700&display=swap" rel="stylesheet">
   <script src="https://unpkg.com/lucide@latest"></script>
-  <!-- Chart.js สำหรับวาดกราฟ -->
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <style>
     body { font-family: 'Prompt', sans-serif; }
@@ -33,7 +32,6 @@
         <div>
           <div class="flex items-center justify-center md:justify-start gap-2 flex-wrap">
             <h1 class="text-2xl sm:text-3.5xl font-extrabold tracking-tight">UNSAFE KILLER REPORT</h1>
-            <!-- 🟢 ป้ายหัวข้อประจำเดือน -->
             <span id="month-badge" class="bg-emerald-500/30 border border-emerald-400/40 text-emerald-200 text-xs font-semibold px-2.5 py-1 rounded-full">
               ประจำเดือนล่าสุด
             </span>
@@ -41,7 +39,6 @@
           <p class="text-xs sm:text-sm text-emerald-200 mt-1">ระบบติดตามและสรุปผลการแก้ไขความปลอดภัยคลังสินค้า Site 7</p>
         </div>
       </div>
-      <!-- ปุ่มส่งรายงาน Unsafe Killer -->
       <a href="https://docs.google.com/forms/d/e/1FAIpQLSeNtolMsyl3p9KFoM0DiQ5fZcLOrDRxII3IKkEVq_fXdAm8VA/viewform?usp=dialog" target="_blank" rel="noopener noreferrer" class="w-full md:w-auto flex items-center justify-center gap-2 bg-gradient-to-r from-amber-500 to-orange-600 hover:from-amber-600 hover:to-orange-700 text-white px-6 py-3 rounded-xl text-base font-bold transition shadow-md border border-amber-300/40">
         <i data-lucide="plus-circle" class="w-5 h-5"></i>
         <span>+ ส่งรายงาน Unsafe Killer</span>
@@ -52,7 +49,7 @@
   <!-- Main Content -->
   <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-6">
 
-    <!-- 🟢 แถบหัวข้อประจำเดือน + ปุ่มกดเปิดดูสถิติ (Default ปิดไว้) -->
+    <!-- แถบหัวข้อประจำเดือน + ปุ่มกดเปิดดูสถิติ (Default ปิดไว้) -->
     <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 mb-4 bg-white p-4 rounded-2xl border border-slate-200 shadow-sm">
       <div class="flex items-center gap-2.5">
         <div class="p-2 bg-emerald-50 text-emerald-700 rounded-xl">
@@ -66,7 +63,6 @@
         </div>
       </div>
 
-      <!-- ปุ่ม Toggle เปิด/ปิด กราฟ (Default ซ่อนไว้) -->
       <button id="toggle-chart-btn" onclick="toggleChartSection()" class="flex items-center gap-2 bg-slate-100 hover:bg-slate-200 text-slate-700 px-4 py-2 rounded-xl text-xs sm:text-sm font-semibold transition border border-slate-200">
         <i data-lucide="bar-chart-3" class="w-4 h-4 text-emerald-600"></i>
         <span id="toggle-btn-text">📊 ดูสถิติการมีส่วนร่วม</span>
@@ -74,7 +70,7 @@
       </button>
     </div>
 
-    <!-- 🟢 Section กราฟการมีส่วนร่วม (ซ่อนเป็น Default โดยคลาส hidden) -->
+    <!-- Section กราฟการมีส่วนร่วม (Default ซ่อนไว้) -->
     <div id="chart-section" class="bg-white p-5 rounded-2xl shadow-sm border border-slate-200 mb-6 hidden transition-all duration-300">
       <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-4">
         <div class="flex items-center gap-3">
@@ -87,14 +83,12 @@
           </div>
         </div>
 
-        <!-- ปุ่มสลับดูยอด -->
         <div class="flex items-center bg-slate-100 p-1 rounded-xl text-xs font-semibold self-start sm:self-auto border border-slate-200">
           <button id="btn-total" onclick="switchMode('total')" class="px-3.5 py-1.5 rounded-lg bg-emerald-600 text-white shadow-sm transition">ยอดรวมสะสม</button>
           <button id="btn-month" onclick="switchMode('month')" class="px-3.5 py-1.5 rounded-lg text-slate-600 hover:text-slate-900 transition">เฉพาะเดือนนี้</button>
         </div>
       </div>
 
-      <!-- กล่องกราฟปรับเป็นความสูงคงที่พร้อม Scrollbar -->
       <div class="relative w-full h-[450px] overflow-y-auto custom-scroll pr-2">
         <div id="chart-wrapper" class="w-full">
           <canvas id="engagementChart"></canvas>
@@ -168,8 +162,9 @@
   </div>
 
   <script>
-    // URL Web App จาก API ของพี่เบิร์ด
-    const API_URL = "https://script.google.com/macros/s/AKfycbwvYlhusEcsSxRoSAD4NYF1rF9hf9fnmaA-24PtmB441n3E37am3-BX9TWQnCIpH7pIVQ/exec";
+    // 🟢 ดึงข้อมูลผ่าน Supabase โดยตรง (ความเร็วระดับ 0.05 วิ)
+    const SUPABASE_URL = "https://skkhfmxnfikjokczcevq.supabase.co";
+    const SUPABASE_KEY = "sb_publishable_f4GFHEEhvJjBS2RwCx0ZLA_gKpvQGUo";
 
     let allReports = [];
     let engagementData = [];
@@ -177,7 +172,6 @@
     let currentMode = 'total';
     let isChartVisible = false;
 
-    // รายชื่อเดือนภาษาไทย
     const thaiMonths = [
       "มกราคม", "กุมภาพันธ์", "มีนาคม", "เมษายน", "พฤษภาคม", "มิถุนายน",
       "กรกฎาคม", "สิงหาคม", "กันยายน", "ตุลาคม", "พฤศจิกายน", "ธันวาคม"
@@ -201,25 +195,34 @@
       if (badgeEl) badgeEl.innerText = `${monthName} ${yearName}`;
     }
 
-    function fetchData() {
+    async function fetchData() {
       document.getElementById('loading').classList.remove('hidden');
       document.getElementById('cards-container').classList.add('hidden');
       document.getElementById('no-data').classList.add('hidden');
 
-      fetch(API_URL)
-        .then(res => res.json())
-        .then(res => {
-          if (Array.isArray(res)) {
-            allReports = res;
-          } else {
-            allReports = res.reports || [];
-            engagementData = res.engagement || [];
+      try {
+        const response = await fetch(`${SUPABASE_URL}/rest/v1/dashboard_cache?id=eq.latest&select=data`, {
+          headers: {
+            'apikey': SUPABASE_KEY,
+            'Authorization': `Bearer ${SUPABASE_KEY}`
           }
-          onDataLoaded();
-        })
-        .catch(err => {
-          onError(err);
         });
+
+        const result = await response.json();
+        
+        if (result && result.length > 0) {
+          const payload = result[0].data;
+          allReports = payload.reports || [];
+          engagementData = payload.engagement || [];
+          onDataLoaded();
+        } else {
+          document.getElementById('loading').classList.add('hidden');
+          document.getElementById('no-data').classList.remove('hidden');
+        }
+      } catch (err) {
+        console.error("Error fetching from Supabase:", err);
+        onError(err);
+      }
     }
 
     function onDataLoaded() {
@@ -229,7 +232,6 @@
       lucide.createIcons();
     }
 
-    // ฟังก์ชันเปิด/ปิด Section กราฟ
     function toggleChartSection() {
       const section = document.getElementById('chart-section');
       const btnText = document.getElementById('toggle-btn-text');
@@ -241,7 +243,7 @@
         section.classList.remove('hidden');
         btnText.innerText = "❌ ซ่อนสถิติการมีส่วนร่วม";
         icon.classList.add('rotate-180');
-        renderChart(); // วาดกราฟเมื่อกดเปิด
+        renderChart();
       } else {
         section.classList.add('hidden');
         btnText.innerText = "📊 ดูสถิติการมีส่วนร่วม";
