@@ -26,8 +26,8 @@
   <!-- Top Decorative Line -->
   <div class="h-1.5 w-full bg-gradient-to-r from-emerald-500 via-teal-600 to-orange-500"></div>
 
-  <!-- Top Navbar -->
-  <header class="bg-gradient-to-r from-emerald-800 via-teal-800 to-slate-900 text-white shadow-md sticky top-0 z-30">
+  <!-- 🟢 Top Navbar (ปลด sticky บนมือถือแล้ว เลื่อนตามเนื้อหา ไม่ขวางจอ) -->
+  <header class="bg-gradient-to-r from-emerald-800 via-teal-800 to-slate-900 text-white shadow-md static sm:sticky sm:top-0 sm:z-30">
     <div class="max-w-7xl mx-auto px-4 py-4 sm:px-6 lg:px-8 flex flex-col md:flex-row justify-between items-center gap-4">
       <div class="flex items-center gap-3 text-center md:text-left flex-col md:flex-row">
         <div class="p-2 bg-emerald-500/20 border border-emerald-400/30 rounded-xl hidden sm:block">
@@ -51,7 +51,7 @@
   </header>
 
   <!-- Main Content -->
-  <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-5 space-y-4">
+  <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-4 sm:mt-5 space-y-4">
 
     <!-- 🏆 กล่อง Safety Popular Vote & โควตาสิทธิ์โหวต -->
     <div class="bg-gradient-to-r from-amber-500 via-amber-600 to-yellow-600 text-white p-4 sm:p-5 rounded-2xl shadow-md flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
@@ -61,7 +61,7 @@
         </div>
         <div>
           <h2 class="text-base sm:text-lg font-bold flex items-center gap-2">
-            Safety Popular Vote ประจำเดือน
+            Safety Popular Vote ประจำเดือน (ตัดสินรางวัล Top 1-2-3)
           </h2>
           <p class="text-xs text-amber-100 mt-0.5">กดปุ่ม 🏆 <b>โหวต</b> ให้เคสที่โดนใจคุณที่สุด (โควตาคนละ 3 เสียง/เดือน)</p>
         </div>
@@ -195,7 +195,7 @@
     </div>
   </main>
 
-  <!-- 🟢 Modal ดูรายชื่อคนกด Like หรือ Vote -->
+  <!-- Modal ดูรายชื่อคนกด Like หรือ Vote -->
   <div id="users-modal" onclick="closeUsersModal()" class="fixed inset-0 bg-black/60 z-50 hidden flex items-center justify-center p-4 backdrop-blur-sm">
     <div onclick="event.stopPropagation()" class="bg-white rounded-2xl max-w-sm w-full p-5 shadow-2xl space-y-4">
       <div class="flex items-center justify-between border-b pb-3">
@@ -228,7 +228,6 @@
     let currentMode = 'total';
     let isChartVisible = false;
 
-    // 🟢 ข้อมูล Like / Vote / Comment
     let allLikesData = [];
     let allVotesData = [];
     let allCommentsData = [];
@@ -237,7 +236,6 @@
     let userVotedCaseIds = new Set();
     const MAX_VOTES = 3;
 
-    // Token & User Name
     let userToken = localStorage.getItem('unsafe_user_token');
     if (!userToken) {
       userToken = 'user_' + Math.random().toString(36).substring(2, 15);
@@ -313,21 +311,18 @@
 
     async function fetchSocialAndVoteData() {
       try {
-        // 1. ดึง Likes
         const resLikes = await fetch(`${SUPABASE_URL}/rest/v1/case_likes?month=eq.${currentMonthKey}&select=*`, {
           headers: { 'apikey': SUPABASE_KEY, 'Authorization': `Bearer ${SUPABASE_KEY}` }
         });
         allLikesData = await resLikes.json();
         userLikedCaseIds = new Set(allLikesData.filter(l => l.user_token === userToken).map(l => l.case_id.toString()));
 
-        // 2. ดึง Votes
         const resVotes = await fetch(`${SUPABASE_URL}/rest/v1/case_votes?month=eq.${currentMonthKey}&select=*`, {
           headers: { 'apikey': SUPABASE_KEY, 'Authorization': `Bearer ${SUPABASE_KEY}` }
         });
         allVotesData = await resVotes.json();
         userVotedCaseIds = new Set(allVotesData.filter(v => v.user_token === userToken).map(v => v.case_id.toString()));
 
-        // 3. ดึง Comments
         const resComments = await fetch(`${SUPABASE_URL}/rest/v1/case_comments?select=*&order=created_at.asc`, {
           headers: { 'apikey': SUPABASE_KEY, 'Authorization': `Bearer ${SUPABASE_KEY}` }
         });
@@ -352,7 +347,6 @@
       }
     }
 
-    // ❤️ 1. ฟังก์ชันกด Like / ยกเลิก Like
     async function toggleLike(caseId) {
       caseId = caseId.toString();
       const isLiked = userLikedCaseIds.has(caseId);
@@ -384,7 +378,6 @@
       }
     }
 
-    // 🏆 2. ฟังก์ชันกด Vote / ยกเลิก Vote
     async function toggleVote(caseId) {
       caseId = caseId.toString();
       const isVoted = userVotedCaseIds.has(caseId);
@@ -423,7 +416,6 @@
       }
     }
 
-    // 👀 เปิด Modal ดูรายชื่อคนกด Like หรือ Vote
     function openUsersModal(caseId, type) {
       caseId = caseId.toString();
       const titleEl = document.getElementById('users-modal-title');
@@ -512,7 +504,6 @@
       container.classList.remove('hidden');
       noData.classList.add('hidden');
 
-      // 🏆 นับคะแนน Vote เพื่อจัดอันดับ Top 1, 2, 3
       const voteCountsMap = {};
       allVotesData.forEach(v => {
         voteCountsMap[v.case_id] = (voteCountsMap[v.case_id] || 0) + 1;
@@ -527,7 +518,6 @@
       const rank2_Id = sortedVoteList[1]?.id || null;
       const rank3_Id = sortedVoteList[2]?.id || null;
 
-      // นับคะแนน Like
       const likeCountsMap = {};
       allLikesData.forEach(l => {
         likeCountsMap[l.case_id] = (likeCountsMap[l.case_id] || 0) + 1;
@@ -543,7 +533,6 @@
 
         const commentsThisCase = allCommentsData.filter(c => c.case_id === cId);
 
-        // ไฮไลต์ตามอันดับ Vote
         let rankBadgeHtml = '';
         let rankCardClass = 'border-slate-200';
 
@@ -605,7 +594,7 @@
         card.innerHTML = `
           ${rankBadgeHtml}
 
-          <div class="p-5 flex-1">
+          <div class="p-4 sm:p-5 flex-1">
             <div class="flex items-start justify-between gap-2 mb-3 pb-3 border-b border-slate-100">
               <div class="flex items-center gap-3">
                 <div class="w-10 h-10 rounded-full bg-emerald-100 text-emerald-700 flex items-center justify-center font-extrabold text-sm">
@@ -623,33 +612,30 @@
               </span>
             </div>
 
-            <div class="space-y-4 mb-4">
-              <div class="p-4 bg-rose-50/60 rounded-xl border border-rose-100">
-                <span class="font-extrabold text-rose-700 block mb-1.5 flex items-center gap-1.5 text-sm sm:text-base">
-                  <i data-lucide="alert-triangle" class="w-4.5 h-4.5"></i> ปัญหาที่พบ:
+            <div class="space-y-3.5 mb-4">
+              <div class="p-3.5 bg-rose-50/60 rounded-xl border border-rose-100">
+                <span class="font-extrabold text-rose-700 block mb-1 flex items-center gap-1.5 text-xs sm:text-sm">
+                  <i data-lucide="alert-triangle" class="w-4 h-4"></i> ปัญหาที่พบ:
                 </span>
-                <p class="text-sm sm:text-base text-slate-700 leading-relaxed font-normal">${r.problem}</p>
+                <p class="text-xs sm:text-sm text-slate-700 leading-relaxed font-normal">${r.problem}</p>
               </div>
-              <div class="p-4 bg-emerald-50/60 rounded-xl border border-emerald-100">
-                <span class="font-extrabold text-emerald-700 block mb-1.5 flex items-center gap-1.5 text-sm sm:text-base">
-                  <i data-lucide="check-circle" class="w-4.5 h-4.5"></i> วิธีการแก้ไข:
+              <div class="p-3.5 bg-emerald-50/60 rounded-xl border border-emerald-100">
+                <span class="font-extrabold text-emerald-700 block mb-1 flex items-center gap-1.5 text-xs sm:text-sm">
+                  <i data-lucide="check-circle" class="w-4 h-4"></i> วิธีการแก้ไข:
                 </span>
-                <p class="text-sm sm:text-base text-slate-700 leading-relaxed font-normal">${r.fixMethod}</p>
+                <p class="text-xs sm:text-sm text-slate-700 leading-relaxed font-normal">${r.fixMethod}</p>
               </div>
             </div>
 
-            <div class="grid grid-cols-2 gap-3 mt-4">
+            <div class="grid grid-cols-2 gap-2.5 mt-3">
               <div>${beforeImgHtml}</div>
               <div>${afterImgHtml}</div>
             </div>
 
-            <!-- 🟢 แถบแยก Action ชัดเจน: 1.กด Like | 2.กด Vote | 3.คอมเมนต์ -->
             <div class="mt-4 pt-3 border-t border-slate-100 space-y-2.5">
               <div class="flex items-center justify-between gap-2 flex-wrap">
                 
-                <!-- กลุ่มปุ่ม Like & Vote -->
                 <div class="flex items-center gap-2">
-                  <!-- ปุ่มกด Like ❤️ -->
                   <button onclick="toggleLike('${r.id}')" class="flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-bold transition ${isLiked ? 'bg-rose-500 text-white shadow-sm' : 'bg-slate-100 text-slate-600 hover:bg-rose-50 hover:text-rose-600'}">
                     <i data-lucide="heart" class="w-3.5 h-3.5 ${isLiked ? 'fill-white' : ''}"></i>
                     <span>${isLiked ? 'ถูกใจแล้ว' : 'ถูกใจ'}</span>
@@ -660,7 +646,6 @@
 
                   <span class="text-slate-300">|</span>
 
-                  <!-- ปุ่มกด Vote 🏆 (มีโควตา 3 เสียง) -->
                   <button onclick="toggleVote('${r.id}')" class="flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-bold transition ${isVoted ? 'bg-amber-500 text-white shadow-sm' : 'bg-amber-50 text-amber-800 hover:bg-amber-100 border border-amber-200'}">
                     <i data-lucide="trophy" class="w-3.5 h-3.5"></i>
                     <span>${isVoted ? 'โหวตแล้ว' : 'โหวตชิงรางวัล'}</span>
@@ -670,14 +655,12 @@
                   </button>
                 </div>
 
-                <!-- ปุ่มเปิดคอมเมนต์ -->
                 <button onclick="toggleCommentBox('${r.id}')" class="flex items-center gap-1 px-3 py-1.5 rounded-xl text-xs font-semibold bg-slate-100 hover:bg-slate-200 text-slate-700 transition">
                   <i data-lucide="message-circle" class="w-3.5 h-3.5 text-emerald-600"></i>
                   <span>คอมเมนต์ (${commentsThisCase.length})</span>
                 </button>
               </div>
 
-              <!-- 💬 กล่องคอมเมนต์ -->
               <div id="comment-box-${r.id}" class="hidden pt-2 space-y-2">
                 <div class="space-y-1.5 max-h-36 overflow-y-auto custom-scroll pr-1">
                   ${commentsListHtml || '<p class="text-[11px] text-slate-400 italic">ยังไม่มีคอมเมนต์ มาร่วมแซวหรือให้กำลังใจเป็นคนแรกสิ!</p>'}
