@@ -37,10 +37,10 @@
           <div class="flex items-center justify-center md:justify-start gap-2 flex-wrap">
             <h1 class="text-xl sm:text-2xl font-extrabold tracking-tight">UNSAFE KILLER REPORT</h1>
             <span class="bg-amber-500/30 border border-amber-400/50 text-amber-200 text-xs font-semibold px-2.5 py-0.5 rounded-full flex items-center gap-1">
-              <i data-lucide="heart-handshake" class="w-3.5 h-3.5"></i> Social Community
+              <i data-lucide="trophy" class="w-3.5 h-3.5"></i> Popular Vote & Community
             </span>
           </div>
-          <p class="text-xs text-emerald-200 mt-0.5">ระบบติดตามผล โหวต และคอมเมนต์ความปลอดภัยคลังสินค้า Site 7</p>
+          <p class="text-xs text-emerald-200 mt-0.5">ระบบติดตามผล โหวตชิงรางวัล และคอมเมนต์ความปลอดภัย Site 7</p>
         </div>
       </div>
       <a href="https://docs.google.com/forms/d/e/1FAIpQLSeNtolMsyl3p9KFoM0DiQ5fZcLOrDRxII3IKkEVq_fXdAm8VA/viewform?usp=dialog" target="_blank" rel="noopener noreferrer" class="w-full md:w-auto flex items-center justify-center gap-2 bg-gradient-to-r from-amber-500 to-orange-600 hover:from-amber-600 hover:to-orange-700 text-white px-5 py-2.5 rounded-xl text-sm font-bold transition shadow-md border border-amber-300/40">
@@ -53,7 +53,28 @@
   <!-- Main Content -->
   <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-5 space-y-4">
 
-    <!-- 👤 แถบตั้งชื่อ / ฉายาประจำตัว (จำในเครื่องตลอดไป) -->
+    <!-- 🏆 กล่อง Safety Popular Vote & โควตาสิทธิ์โหวต -->
+    <div class="bg-gradient-to-r from-amber-500 via-amber-600 to-yellow-600 text-white p-4 sm:p-5 rounded-2xl shadow-md flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
+      <div class="flex items-center gap-3.5">
+        <div class="p-3 bg-white/20 rounded-2xl flex-shrink-0">
+          <i data-lucide="trophy" class="w-7 h-7 text-white"></i>
+        </div>
+        <div>
+          <h2 class="text-base sm:text-lg font-bold flex items-center gap-2">
+            Safety Popular Vote ประจำเดือน (ตัดสินรางวัล Top 1-2-3)
+          </h2>
+          <p class="text-xs text-amber-100 mt-0.5">กดปุ่ม 🏆 <b>โหวต</b> ให้เคสที่โดนใจคุณที่สุด (โควตาคนละ 3 เสียง/เดือน)</p>
+        </div>
+      </div>
+      
+      <!-- โควตาสิทธิ์ที่เหลือ -->
+      <div class="bg-slate-900/40 border border-white/20 px-4 py-2 rounded-xl text-xs sm:text-sm font-semibold flex items-center gap-2 self-stretch md:self-auto justify-center">
+        <span>สิทธิ์โหวตของคุณ:</span>
+        <span id="vote-quota-badge" class="bg-amber-400 text-slate-950 font-extrabold px-2.5 py-0.5 rounded-md text-xs">3/3 เสียง</span>
+      </div>
+    </div>
+
+    <!-- 👤 แถบตั้งชื่อ / ฉายาประจำตัว -->
     <div class="bg-gradient-to-r from-slate-900 to-slate-800 text-white p-4 rounded-2xl shadow-sm flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 border border-slate-700">
       <div class="flex items-center gap-3">
         <div class="p-2.5 bg-emerald-500/20 text-emerald-400 rounded-xl border border-emerald-500/30">
@@ -174,19 +195,18 @@
     </div>
   </main>
 
-  <!-- 🟢 Modal ดูรายชื่อคนกด Like / Vote -->
-  <div id="likes-modal" onclick="closeLikesModal()" class="fixed inset-0 bg-black/60 z-50 hidden flex items-center justify-center p-4 backdrop-blur-sm">
+  <!-- 🟢 Modal ดูรายชื่อคนกด Like หรือ Vote -->
+  <div id="users-modal" onclick="closeUsersModal()" class="fixed inset-0 bg-black/60 z-50 hidden flex items-center justify-center p-4 backdrop-blur-sm">
     <div onclick="event.stopPropagation()" class="bg-white rounded-2xl max-w-sm w-full p-5 shadow-2xl space-y-4">
       <div class="flex items-center justify-between border-b pb-3">
-        <h3 class="text-sm sm:text-base font-bold text-slate-800 flex items-center gap-2">
-          <i data-lucide="heart" class="w-4 h-4 text-rose-500 fill-rose-500"></i> รายชื่อคนที่กดถูกใจ
+        <h3 id="users-modal-title" class="text-sm sm:text-base font-bold text-slate-800 flex items-center gap-2">
+          รายชื่อ
         </h3>
-        <button onclick="closeLikesModal()" class="text-slate-400 hover:text-slate-600"><i data-lucide="x" class="w-5 h-5"></i></button>
+        <button onclick="closeUsersModal()" class="text-slate-400 hover:text-slate-600"><i data-lucide="x" class="w-5 h-5"></i></button>
       </div>
-      <div id="likes-list-content" class="max-h-60 overflow-y-auto custom-scroll space-y-2 text-xs sm:text-sm text-slate-600">
-        <!-- รายชื่อคนกด Like จะแสดงตรงนี้ -->
+      <div id="users-list-content" class="max-h-60 overflow-y-auto custom-scroll space-y-2 text-xs sm:text-sm text-slate-600">
       </div>
-      <button onclick="closeLikesModal()" class="w-full py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-semibold rounded-xl transition">ปิดหน้าต่าง</button>
+      <button onclick="closeUsersModal()" class="w-full py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-semibold rounded-xl transition">ปิดหน้าต่าง</button>
     </div>
   </div>
 
@@ -208,21 +228,25 @@
     let currentMode = 'total';
     let isChartVisible = false;
 
-    // 🟢 ระบบจัดการ Like และ Comment
+    // 🟢 ข้อมูล Like / Vote / Comment
     let allLikesData = [];
+    let allVotesData = [];
     let allCommentsData = [];
-    let userLikedCaseIds = new Set();
 
-    // ระบบจัดการชื่อและ Token
-    let voterToken = localStorage.getItem('unsafe_user_token');
-    if (!voterToken) {
-      voterToken = 'user_' + Math.random().toString(36).substring(2, 15);
-      localStorage.setItem('unsafe_user_token', voterToken);
+    let userLikedCaseIds = new Set();
+    let userVotedCaseIds = new Set();
+    const MAX_VOTES = 3;
+
+    // Token & User Name
+    let userToken = localStorage.getItem('unsafe_user_token');
+    if (!userToken) {
+      userToken = 'user_' + Math.random().toString(36).substring(2, 15);
+      localStorage.setItem('unsafe_user_token', userToken);
     }
 
     let currentUserName = localStorage.getItem('unsafe_user_name');
     if (!currentUserName) {
-      currentUserName = "นิรนามสุดหล่อ (" + voterToken.substring(5, 9) + ")";
+      currentUserName = "ชาว Site 7 (" + userToken.substring(5, 9) + ")";
       localStorage.setItem('unsafe_user_name', currentUserName);
     }
 
@@ -268,7 +292,6 @@
       document.getElementById('no-data').classList.add('hidden');
 
       try {
-        // 1. ดึงข้อมูลเคส
         const resDashboard = await fetch(`${SUPABASE_URL}/rest/v1/dashboard_cache?id=eq.latest&select=data`, {
           headers: { 'apikey': SUPABASE_KEY, 'Authorization': `Bearer ${SUPABASE_KEY}` }
         });
@@ -280,9 +303,7 @@
           engagementData = payload.engagement || [];
         }
 
-        // 2. ดึงข้อมูล Like และ Comments จาก Supabase
-        await fetchSocialData();
-
+        await fetchSocialAndVoteData();
         onDataLoaded();
       } catch (err) {
         console.error(err);
@@ -290,113 +311,161 @@
       }
     }
 
-    async function fetchSocialData() {
+    async function fetchSocialAndVoteData() {
       try {
-        // ดึง Like ทั้งหมด
+        // 1. ดึง Likes
         const resLikes = await fetch(`${SUPABASE_URL}/rest/v1/case_likes?month=eq.${currentMonthKey}&select=*`, {
           headers: { 'apikey': SUPABASE_KEY, 'Authorization': `Bearer ${SUPABASE_KEY}` }
         });
         allLikesData = await resLikes.json();
+        userLikedCaseIds = new Set(allLikesData.filter(l => l.user_token === userToken).map(l => l.case_id.toString()));
 
-        userLikedCaseIds = new Set();
-        allLikesData.forEach(l => {
-          if (l.user_token === voterToken) {
-            userLikedCaseIds.add(l.case_id.toString());
-          }
+        // 2. ดึง Votes
+        const resVotes = await fetch(`${SUPABASE_URL}/rest/v1/case_votes?month=eq.${currentMonthKey}&select=*`, {
+          headers: { 'apikey': SUPABASE_KEY, 'Authorization': `Bearer ${SUPABASE_KEY}` }
         });
+        allVotesData = await resVotes.json();
+        userVotedCaseIds = new Set(allVotesData.filter(v => v.user_token === userToken).map(v => v.case_id.toString()));
 
-        // ดึง Comment ทั้งหมด
+        // 3. ดึง Comments
         const resComments = await fetch(`${SUPABASE_URL}/rest/v1/case_comments?select=*&order=created_at.asc`, {
           headers: { 'apikey': SUPABASE_KEY, 'Authorization': `Bearer ${SUPABASE_KEY}` }
         });
         allCommentsData = await resComments.json();
 
+        updateVoteQuotaUI();
       } catch (e) {
-        console.error("Error loading social data:", e);
+        console.error("Error loading social/vote data:", e);
       }
     }
 
-    // 🟢 ฟังก์ชันกด Like / ยกเลิก Like
+    function updateVoteQuotaUI() {
+      const remaining = MAX_VOTES - userVotedCaseIds.size;
+      const badge = document.getElementById('vote-quota-badge');
+      if (badge) {
+        badge.innerText = `${remaining}/${MAX_VOTES} เสียง`;
+        if (remaining === 0) {
+          badge.className = "bg-rose-500 text-white font-extrabold px-2.5 py-0.5 rounded-md text-xs";
+        } else {
+          badge.className = "bg-amber-400 text-slate-950 font-extrabold px-2.5 py-0.5 rounded-md text-xs";
+        }
+      }
+    }
+
+    // ❤️ 1. ฟังก์ชันกด Like / ยกเลิก Like
     async function toggleLike(caseId) {
       caseId = caseId.toString();
       const isLiked = userLikedCaseIds.has(caseId);
 
       if (isLiked) {
-        // ยกเลิก Like
         userLikedCaseIds.delete(caseId);
-        allLikesData = allLikesData.filter(l => !(l.case_id === caseId && l.user_token === voterToken));
+        allLikesData = allLikesData.filter(l => !(l.case_id === caseId && l.user_token === userToken));
         renderCards(allReports);
 
-        await fetch(`${SUPABASE_URL}/rest/v1/case_likes?case_id=eq.${caseId}&month=eq.${currentMonthKey}&user_token=eq.${voterToken}`, {
+        await fetch(`${SUPABASE_URL}/rest/v1/case_likes?case_id=eq.${caseId}&month=eq.${currentMonthKey}&user_token=eq.${userToken}`, {
           method: 'DELETE',
           headers: { 'apikey': SUPABASE_KEY, 'Authorization': `Bearer ${SUPABASE_KEY}` }
         });
       } else {
-        // เพิ่ม Like
         userLikedCaseIds.add(caseId);
         allLikesData.push({
           case_id: caseId,
           month: currentMonthKey,
           user_name: currentUserName,
-          user_token: voterToken
+          user_token: userToken
         });
         renderCards(allReports);
 
         await fetch(`${SUPABASE_URL}/rest/v1/case_likes`, {
           method: 'POST',
-          headers: {
-            'apikey': SUPABASE_KEY,
-            'Authorization': `Bearer ${SUPABASE_KEY}`,
-            'Content-Type': 'application/json'
-          },
-          body: JSON.stringify({
-            case_id: caseId,
-            month: currentMonthKey,
-            user_name: currentUserName,
-            user_token: voterToken
-          })
+          headers: { 'apikey': SUPABASE_KEY, 'Authorization': `Bearer ${SUPABASE_KEY}`, 'Content-Type': 'application/json' },
+          body: JSON.stringify({ case_id: caseId, month: currentMonthKey, user_name: currentUserName, user_token: userToken })
         });
       }
     }
 
-    // 🟢 ฟังก์ชันเปิดดูรายชื่อคนกด Like
-    function openLikesModal(caseId) {
+    // 🏆 2. ฟังก์ชันกด Vote / ยกเลิก Vote
+    async function toggleVote(caseId) {
       caseId = caseId.toString();
-      const likesThisCase = allLikesData.filter(l => l.case_id === caseId);
-      const container = document.getElementById('likes-list-content');
+      const isVoted = userVotedCaseIds.has(caseId);
+
+      if (!isVoted && userVotedCaseIds.size >= MAX_VOTES) {
+        alert("คุณใช้สิทธิ์โหวตครบ 3 เสียงของเดือนนี้แล้วครับ! 🎉\n(สามารถกดปุ่มเดิมที่เคยโหวตเพื่อยกเลิกแล้วเปลี่ยนไปโหวตเคสอื่นได้ครับ)");
+        return;
+      }
+
+      if (isVoted) {
+        userVotedCaseIds.delete(caseId);
+        allVotesData = allVotesData.filter(v => !(v.case_id === caseId && v.user_token === userToken));
+        updateVoteQuotaUI();
+        renderCards(allReports);
+
+        await fetch(`${SUPABASE_URL}/rest/v1/case_votes?case_id=eq.${caseId}&month=eq.${currentMonthKey}&user_token=eq.${userToken}`, {
+          method: 'DELETE',
+          headers: { 'apikey': SUPABASE_KEY, 'Authorization': `Bearer ${SUPABASE_KEY}` }
+        });
+      } else {
+        userVotedCaseIds.add(caseId);
+        allVotesData.push({
+          case_id: caseId,
+          month: currentMonthKey,
+          user_name: currentUserName,
+          user_token: userToken
+        });
+        updateVoteQuotaUI();
+        renderCards(allReports);
+
+        await fetch(`${SUPABASE_URL}/rest/v1/case_votes`, {
+          method: 'POST',
+          headers: { 'apikey': SUPABASE_KEY, 'Authorization': `Bearer ${SUPABASE_KEY}`, 'Content-Type': 'application/json' },
+          body: JSON.stringify({ case_id: caseId, month: currentMonthKey, user_name: currentUserName, user_token: userToken })
+        });
+      }
+    }
+
+    // 👀 เปิด Modal ดูรายชื่อคนกด Like หรือ Vote
+    function openUsersModal(caseId, type) {
+      caseId = caseId.toString();
+      const titleEl = document.getElementById('users-modal-title');
+      const container = document.getElementById('users-list-content');
       container.innerHTML = '';
 
-      if (likesThisCase.length === 0) {
-        container.innerHTML = '<p class="text-center text-slate-400 py-4">ยังไม่มีใครกดถูกใจเคสนี้ เป็นคนแรกเลยสิ!</p>';
+      let list = [];
+      if (type === 'like') {
+        titleEl.innerHTML = '<i data-lucide="heart" class="w-4 h-4 text-rose-500 fill-rose-500"></i> รายชื่อคนที่กดถูกใจ (Likes)';
+        list = allLikesData.filter(l => l.case_id === caseId);
       } else {
-        likesThisCase.forEach((l, idx) => {
+        titleEl.innerHTML = '<i data-lucide="trophy" class="w-4 h-4 text-amber-500"></i> รายชื่อคนที่กดโหวต (Votes)';
+        list = allVotesData.filter(v => v.case_id === caseId);
+      }
+
+      if (list.length === 0) {
+        container.innerHTML = `<p class="text-center text-slate-400 py-4">ยังไม่มีใครกด${type === 'like' ? 'ถูกใจ' : 'โหวต'}เคสนี้</p>`;
+      } else {
+        list.forEach((item, idx) => {
           const div = document.createElement('div');
           div.className = "flex items-center gap-2 p-2 bg-slate-50 rounded-xl border border-slate-100";
           div.innerHTML = `
-            <span class="w-6 h-6 rounded-full bg-rose-100 text-rose-600 flex items-center justify-center text-xs font-bold">${idx + 1}</span>
-            <span class="font-medium text-slate-800">${l.user_name}</span>
+            <span class="w-6 h-6 rounded-full ${type === 'like' ? 'bg-rose-100 text-rose-600' : 'bg-amber-100 text-amber-700'} flex items-center justify-center text-xs font-bold">${idx + 1}</span>
+            <span class="font-medium text-slate-800">${item.user_name}</span>
           `;
           container.appendChild(div);
         });
       }
 
-      document.getElementById('likes-modal').classList.remove('hidden');
+      document.getElementById('users-modal').classList.remove('hidden');
       lucide.createIcons();
     }
 
-    function closeLikesModal() {
-      document.getElementById('likes-modal').classList.add('hidden');
+    function closeUsersModal() {
+      document.getElementById('users-modal').classList.add('hidden');
     }
 
-    // 🟢 ฟังก์ชันเปิด/ปิดกล่องคอมเมนต์
     function toggleCommentBox(caseId) {
       const box = document.getElementById(`comment-box-${caseId}`);
-      if (box) {
-        box.classList.toggle('hidden');
-      }
+      if (box) box.classList.toggle('hidden');
     }
 
-    // 🟢 ฟังก์ชันส่งคอมเมนต์
     async function submitComment(caseId) {
       const input = document.getElementById(`input-comment-${caseId}`);
       const text = input.value.trim();
@@ -413,22 +482,13 @@
       input.value = '';
       renderCards(allReports);
       
-      // เปิดกล่องค้างไว้ให้เห็นคอมเมนต์ใหม่ทันที
       const box = document.getElementById(`comment-box-${caseId}`);
       if (box) box.classList.remove('hidden');
 
       await fetch(`${SUPABASE_URL}/rest/v1/case_comments`, {
         method: 'POST',
-        headers: {
-          'apikey': SUPABASE_KEY,
-          'Authorization': `Bearer ${SUPABASE_KEY}`,
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
-          case_id: caseId.toString(),
-          user_name: currentUserName,
-          comment_text: text
-        })
+        headers: { 'apikey': SUPABASE_KEY, 'Authorization': `Bearer ${SUPABASE_KEY}`, 'Content-Type': 'application/json' },
+        body: JSON.stringify({ case_id: caseId.toString(), user_name: currentUserName, comment_text: text })
       });
     }
 
@@ -452,51 +512,59 @@
       container.classList.remove('hidden');
       noData.classList.add('hidden');
 
-      // นับคะแนน Like เพื่อหา Top 1, 2, 3
+      // 🏆 นับคะแนน Vote เพื่อจัดอันดับ Top 1, 2, 3
+      const voteCountsMap = {};
+      allVotesData.forEach(v => {
+        voteCountsMap[v.case_id] = (voteCountsMap[v.case_id] || 0) + 1;
+      });
+
+      const sortedVoteList = Object.keys(voteCountsMap)
+        .map(id => ({ id: id.toString(), votes: voteCountsMap[id] }))
+        .filter(item => item.votes > 0)
+        .sort((a, b) => b.votes - a.votes);
+
+      const rank1_Id = sortedVoteList[0]?.id || null;
+      const rank2_Id = sortedVoteList[1]?.id || null;
+      const rank3_Id = sortedVoteList[2]?.id || null;
+
+      // นับคะแนน Like
       const likeCountsMap = {};
       allLikesData.forEach(l => {
         likeCountsMap[l.case_id] = (likeCountsMap[l.case_id] || 0) + 1;
       });
 
-      const sortedLikeList = Object.keys(likeCountsMap)
-        .map(id => ({ id: id.toString(), likes: likeCountsMap[id] }))
-        .filter(item => item.likes > 0)
-        .sort((a, b) => b.likes - a.likes);
-
-      const rank1_Id = sortedLikeList[0]?.id || null;
-      const rank2_Id = sortedLikeList[1]?.id || null;
-      const rank3_Id = sortedLikeList[2]?.id || null;
-
       reports.forEach(r => {
         const cId = r.id.toString();
+        const voteCount = voteCountsMap[cId] || 0;
         const likeCount = likeCountsMap[cId] || 0;
+
+        const isVoted = userVotedCaseIds.has(cId);
         const isLiked = userLikedCaseIds.has(cId);
 
-        // ดึงคอมเมนต์ของเคสนี้
         const commentsThisCase = allCommentsData.filter(c => c.case_id === cId);
 
-        // ตรวจสอบอันดับเหรียญรางวัล
+        // ไฮไลต์ตามอันดับ Vote
         let rankBadgeHtml = '';
         let rankCardClass = 'border-slate-200';
 
-        if (likeCount > 0) {
+        if (voteCount > 0) {
           if (cId === rank1_Id) {
             rankCardClass = 'gold-rank';
             rankBadgeHtml = `
               <div class="bg-gradient-to-r from-amber-500 via-amber-600 to-yellow-500 text-white text-[11px] font-extrabold px-3 py-1 flex items-center justify-center gap-1.5 shadow-sm">
-                <i data-lucide="crown" class="w-4 h-4"></i> 🥇 อันดับ 1 Popular Vote (${likeCount} ถูกใจ)
+                <i data-lucide="crown" class="w-4 h-4"></i> 🥇 อันดับ 1 Popular Vote (${voteCount} โหวต)
               </div>`;
           } else if (cId === rank2_Id) {
             rankCardClass = 'silver-rank';
             rankBadgeHtml = `
               <div class="bg-gradient-to-r from-slate-400 via-slate-500 to-slate-400 text-white text-[11px] font-extrabold px-3 py-1 flex items-center justify-center gap-1.5 shadow-sm">
-                <i data-lucide="award" class="w-4 h-4"></i> 🥈 อันดับ 2 Popular Vote (${likeCount} ถูกใจ)
+                <i data-lucide="award" class="w-4 h-4"></i> 🥈 อันดับ 2 Popular Vote (${voteCount} โหวต)
               </div>`;
           } else if (cId === rank3_Id) {
             rankCardClass = 'bronze-rank';
             rankBadgeHtml = `
               <div class="bg-gradient-to-r from-amber-700 via-amber-800 to-orange-800 text-white text-[11px] font-extrabold px-3 py-1 flex items-center justify-center gap-1.5 shadow-sm">
-                <i data-lucide="medal" class="w-4 h-4"></i> 🥉 อันดับ 3 Popular Vote (${likeCount} ถูกใจ)
+                <i data-lucide="medal" class="w-4 h-4"></i> 🥉 อันดับ 3 Popular Vote (${voteCount} โหวต)
               </div>`;
           }
         }
@@ -524,7 +592,6 @@
                <i data-lucide="image-off" class="w-6 h-6"></i><span>ไม่มีรูปหลังแก้ไข</span>
              </div>`;
 
-        // สร้างรายการคอมเมนต์
         let commentsListHtml = '';
         commentsThisCase.forEach(c => {
           commentsListHtml += `
@@ -576,39 +643,52 @@
               <div>${afterImgHtml}</div>
             </div>
 
-            <!-- 🟢 แถบ Like & Comment Actions -->
-            <div class="mt-4 pt-3 border-t border-slate-100 flex items-center justify-between gap-2">
-              <div class="flex items-center gap-3">
-                <!-- ปุ่มกด Like -->
-                <button onclick="toggleLike('${r.id}')" class="flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-bold transition ${isLiked ? 'bg-rose-500 text-white shadow-md shadow-rose-200' : 'bg-slate-100 text-slate-600 hover:bg-rose-50 hover:text-rose-600'}">
-                  <i data-lucide="heart" class="w-4 h-4 ${isLiked ? 'fill-white' : ''}"></i>
-                  <span>${isLiked ? 'ถูกใจแล้ว' : 'ถูกใจ'}</span>
-                </button>
+            <!-- 🟢 แถบแยก Action ชัดเจน: 1.กด Like | 2.กด Vote | 3.คอมเมนต์ -->
+            <div class="mt-4 pt-3 border-t border-slate-100 space-y-2.5">
+              <div class="flex items-center justify-between gap-2 flex-wrap">
+                
+                <!-- กลุ่มปุ่ม Like & Vote -->
+                <div class="flex items-center gap-2">
+                  <!-- ปุ่มกด Like ❤️ -->
+                  <button onclick="toggleLike('${r.id}')" class="flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-bold transition ${isLiked ? 'bg-rose-500 text-white shadow-sm' : 'bg-slate-100 text-slate-600 hover:bg-rose-50 hover:text-rose-600'}">
+                    <i data-lucide="heart" class="w-3.5 h-3.5 ${isLiked ? 'fill-white' : ''}"></i>
+                    <span>${isLiked ? 'ถูกใจแล้ว' : 'ถูกใจ'}</span>
+                  </button>
+                  <button onclick="openUsersModal('${r.id}', 'like')" class="text-xs text-slate-500 hover:text-rose-600 font-semibold underline underline-offset-2">
+                    ${likeCount}
+                  </button>
 
-                <!-- ตัวเลข Like ที่คลิกดูรายชื่อคนกดได้ -->
-                <button onclick="openLikesModal('${r.id}')" class="text-xs text-slate-500 hover:text-emerald-700 font-semibold underline underline-offset-2 flex items-center gap-1">
-                  <span>${likeCount} ถูกใจ</span>
+                  <span class="text-slate-300">|</span>
+
+                  <!-- ปุ่มกด Vote 🏆 (มีโควตา 3 เสียง) -->
+                  <button onclick="toggleVote('${r.id}')" class="flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-bold transition ${isVoted ? 'bg-amber-500 text-white shadow-sm' : 'bg-amber-50 text-amber-800 hover:bg-amber-100 border border-amber-200'}">
+                    <i data-lucide="trophy" class="w-3.5 h-3.5"></i>
+                    <span>${isVoted ? 'โหวตแล้ว' : 'โหวตชิงรางวัล'}</span>
+                  </button>
+                  <button onclick="openUsersModal('${r.id}', 'vote')" class="text-xs text-amber-700 hover:text-amber-900 font-semibold underline underline-offset-2">
+                    ${voteCount} เสียง
+                  </button>
+                </div>
+
+                <!-- ปุ่มเปิดคอมเมนต์ -->
+                <button onclick="toggleCommentBox('${r.id}')" class="flex items-center gap-1 px-3 py-1.5 rounded-xl text-xs font-semibold bg-slate-100 hover:bg-slate-200 text-slate-700 transition">
+                  <i data-lucide="message-circle" class="w-3.5 h-3.5 text-emerald-600"></i>
+                  <span>คอมเมนต์ (${commentsThisCase.length})</span>
                 </button>
               </div>
 
-              <!-- ปุ่มเปิดช่องคอมเมนต์ -->
-              <button onclick="toggleCommentBox('${r.id}')" class="flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-semibold bg-slate-100 hover:bg-slate-200 text-slate-700 transition">
-                <i data-lucide="message-circle" class="w-4 h-4 text-emerald-600"></i>
-                <span>คอมเมนต์ (${commentsThisCase.length})</span>
-              </button>
-            </div>
-
-            <!-- 💬 กล่องแสดงความคิดเห็น (ซ่อนไว้เป็น Default) -->
-            <div id="comment-box-${r.id}" class="hidden mt-3 pt-3 border-t border-dashed border-slate-200 space-y-2.5">
-              <div class="space-y-1.5 max-h-40 overflow-y-auto custom-scroll pr-1">
-                ${commentsListHtml || '<p class="text-[11px] text-slate-400 italic">ยังไม่มีคอมเมนต์ มาร่วมแซวหรือให้กำลังใจเป็นคนแรกสิ!</p>'}
-              </div>
-              <div class="flex gap-2">
-                <input type="text" id="input-comment-${r.id}" onkeypress="if(event.key==='Enter') submitComment('${r.id}')" placeholder="พิมพ์คอมเมนต์แซวหรือชื่นชม..." class="flex-1 pl-3 pr-2 py-1.5 bg-slate-50 border border-slate-200 rounded-xl text-xs focus:outline-none focus:ring-2 focus:ring-emerald-500">
-                <button onclick="submitComment('${r.id}')" class="bg-emerald-600 hover:bg-emerald-700 text-white px-3 py-1.5 rounded-xl text-xs font-bold transition flex items-center gap-1">
-                  <i data-lucide="send" class="w-3 h-3"></i>
-                  <span>ส่ง</span>
-                </button>
+              <!-- 💬 กล่องคอมเมนต์ -->
+              <div id="comment-box-${r.id}" class="hidden pt-2 space-y-2">
+                <div class="space-y-1.5 max-h-36 overflow-y-auto custom-scroll pr-1">
+                  ${commentsListHtml || '<p class="text-[11px] text-slate-400 italic">ยังไม่มีคอมเมนต์ มาร่วมแซวหรือให้กำลังใจเป็นคนแรกสิ!</p>'}
+                </div>
+                <div class="flex gap-2">
+                  <input type="text" id="input-comment-${r.id}" onkeypress="if(event.key==='Enter') submitComment('${r.id}')" placeholder="พิมพ์คอมเมนต์แซวหรือชื่นชม..." class="flex-1 pl-3 pr-2 py-1.5 bg-slate-50 border border-slate-200 rounded-xl text-xs focus:outline-none focus:ring-2 focus:ring-emerald-500">
+                  <button onclick="submitComment('${r.id}')" class="bg-emerald-600 hover:bg-emerald-700 text-white px-3 py-1.5 rounded-xl text-xs font-bold transition flex items-center gap-1">
+                    <i data-lucide="send" class="w-3 h-3"></i>
+                    <span>ส่ง</span>
+                  </button>
+                </div>
               </div>
             </div>
 
