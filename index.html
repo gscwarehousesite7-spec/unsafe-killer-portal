@@ -9,26 +9,23 @@
   <script src="https://unpkg.com/lucide@latest"></script>
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <style>
-    body { font-family: 'Prompt', sans-serif; font-size: 15px; } /* 🟢 ขยาย Base Font ขึ้น 1 step */
+    body { font-family: 'Prompt', sans-serif; font-size: 15px; }
     .img-card { transition: transform 0.2s ease-in-out; }
     .img-card:hover { transform: scale(1.02); }
     .custom-scroll::-webkit-scrollbar { width: 6px; }
     .custom-scroll::-webkit-scrollbar-track { background: #f1f5f9; border-radius: 8px; }
     .custom-scroll::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 8px; }
     .custom-scroll::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
-
     .gold-rank { border: 2.5px solid #f59e0b; box-shadow: 0 10px 25px -5px rgba(245, 158, 11, 0.25); }
     .silver-rank { border: 2.5px solid #94a3b8; box-shadow: 0 10px 25px -5px rgba(148, 163, 184, 0.25); }
     .bronze-rank { border: 2.5px solid #d97706; box-shadow: 0 10px 25px -5px rgba(217, 119, 6, 0.25); }
-
-    /* 🟢 ป้าย Mention สไตล์สีเขียว SCGC */
-    .mention-tag { color: #047857; font-weight: 700; background-color: #ecfdf5; padding: 2px 6px; border-radius: 6px; border: 1px solid #a7f3d0; }
+    .mention-tag { color: #047857; font-weight: 700; background-color: #ecfdf5; padding: 2px 6px; border-radius: 6px; border: 1px solid #a7f3d0; display: inline-block; }
   </style>
 </head>
 <body class="bg-slate-100 min-h-screen text-slate-800 pb-16 antialiased">
   <!-- Top Decorative Line -->
   <div class="h-1.5 w-full bg-gradient-to-r from-emerald-500 via-teal-600 to-orange-500"></div>
-  
+
   <!-- 🟢 Top Navbar -->
   <header class="bg-gradient-to-r from-emerald-800 via-teal-800 to-slate-900 text-white shadow-md static sm:sticky sm:top-0 sm:z-30">
     <div class="max-w-7xl mx-auto px-4 py-4 sm:px-6 lg:px-8 flex flex-col md:flex-row justify-between items-center gap-4">
@@ -68,7 +65,6 @@
           <p class="text-xs sm:text-sm text-amber-100 mt-0.5">กดปุ่ม 🏆 <b>โหวต</b> ให้เคสที่โดนใจคุณที่สุด (โควตาคนละ 3 เสียง/เดือน)</p>
         </div>
       </div>
-
       <!-- โควตาสิทธิ์ที่เหลือ -->
       <div class="bg-slate-900/40 border border-white/20 px-4 py-2 rounded-xl text-xs sm:text-sm font-semibold flex items-center gap-2 self-stretch md:self-auto justify-center">
         <span>สิทธิ์โหวตของคุณ:</span>
@@ -220,7 +216,9 @@
   <script>
     const SUPABASE_URL = "https://skkhfmxnfikjokczcevq.supabase.co";
     const SUPABASE_KEY = "sb_publishable_f4GFHEEhvJjBS2RwCx0ZLA_gKpvQGUo";
-    
+    // 🟢 URL Web App จาก Google Apps Script (ใช้สำหรับยิงแจ้งเตือน LINE)
+    const API_URL = "https://script.google.com/macros/s/AKfycbxISnAKeGPGFoFgXtCDN28gnS_C-yObAQSSblMVP7oVDmSP8wLSLTGm1eVtLHy3OGET6A/exec";
+
     let allReports = [];
     let engagementData = [];
     let dynamicStaffList = []; // 🟢 รายชื่อพนักงานอัตโนมัติสำหรับ @mention
@@ -461,8 +459,7 @@
       if (box) box.classList.toggle('hidden');
     }
 
-    // 🟢 ระบบส่งคอมเมนต์ขึ้น Supabase
-        // 🟢 ระบบส่งคอมเมนต์ + ยิงแจ้งเตือนหาคนที่ถูก @แท็ก
+    // 🟢 ระบบส่งคอมเมนต์ + ยิงแจ้งเตือนหาคนที่ถูก @แท็ก
     async function submitComment(caseId) {
       const input = document.getElementById(`input-comment-${caseId}`);
       const text = input.value.trim();
@@ -477,7 +474,7 @@
 
       allCommentsData.push(newComment);
       input.value = '';
-      
+
       const dropdown = document.getElementById(`mention-dropdown-${caseId}`);
       if (dropdown) dropdown.classList.add('hidden');
 
@@ -493,19 +490,25 @@
         body: JSON.stringify({ case_id: caseId.toString(), user_name: currentUserName, comment_text: text })
       });
 
-      // 2. 🟢 ตรวจหาว่าในข้อความมี @ชื่อพนักงาน คนไหนบ้าง (เทียบจากรายชื่อจริง)
+      // 2. 🟢 ตรวจหาว่าในข้อความมี @ชื่อพนักงาน คนไหนบ้าง
       if (text.includes("@")) {
-        // ค้นหาชื่อพนักงานที่ถูกแท็กในข้อความ
         let matchedName = "";
-        for (let name of dynamicStaffList) {
+        
+        // เรียงลำดับชื่อที่ยาวกว่ามาก่อน เพื่อจับชื่อ-นามสกุลเต็มก่อนชื่อย่อ
+        const sortedStaff = [...dynamicStaffList].sort((a, b) => b.length - a.length);
+        
+        for (let name of sortedStaff) {
           const firstName = name.split(" ")[0];
-          if (text.includes("@" + name) || text.includes("@" + firstName)) {
-            matchedName = name; // ได้ชื่อเต็มของคนที่ถูกแท็ก
+          if (text.includes("@" + name)) {
+            matchedName = name; // ได้ชื่อ-นามสกุลเต็ม
+            break;
+          } else if (text.includes("@" + firstName)) {
+            matchedName = name; // ได้ชื่อเต็มแม้พิมพ์แค่ชื่อจริง
             break;
           }
         }
 
-        // ถ้าระบุชื่อพนักงานที่ถูกแท็กเจอ ให้ยิงหาคนนั้นทันที
+        // ถ้าระบุชื่อพนักงานที่ถูกแท็กเจอ ให้ยิงแจ้งเตือน LINE หาคนนั้นทันที
         if (matchedName) {
           fetch(API_URL, {
             method: "POST",
@@ -647,10 +650,21 @@
                <i data-lucide="image-off" class="w-6 h-6"></i><span>ไม่มีรูปหลังแก้ไข</span>
              </div>`;
 
-        // 🟢 เรนเดอร์คอมเมนต์ + แปลง @ชื่อ ให้เป็นแท็กสีเขียว + ปุ่มตอบกลับ
+        // 🟢 เรนเดอร์คอมเมนต์ + แปลง @ชื่อ-นามสกุล ให้เป็นป้ายแท็กสีเขียวแบบเต็มชื่อ
         let commentsListHtml = '';
         commentsThisCase.forEach(c => {
-          const formattedComment = c.comment_text.replace(/@([^\s]+)/g, '<span class="mention-tag">@$1</span>');
+          let formattedComment = c.comment_text;
+          
+          // วนลูปแทนที่ชื่อพนักงานทุกคนให้เป็นแท็กสีเขียวครอบคลุมทั้งชื่อและนามสกุล
+          const sortedStaff = [...dynamicStaffList].sort((a, b) => b.length - a.length);
+          sortedStaff.forEach(name => {
+            const regex = new RegExp("@" + name, "g");
+            formattedComment = formattedComment.replace(regex, `<span class="mention-tag">@${name}</span>`);
+          });
+
+          // สำรองสำหรับกรณีแท็กด้วยชื่อจริงอย่างเดียว
+          formattedComment = formattedComment.replace(/@([^\s]+)/g, '<span class="mention-tag">@$1</span>');
+
           commentsListHtml += `
             <div class="p-2.5 bg-slate-50 rounded-xl border border-slate-100 text-xs sm:text-sm flex justify-between items-start gap-2">
               <div>
@@ -681,7 +695,8 @@
                 #เคสที่ ${r.id}
               </span>
             </div>
-            
+
+            <!-- กล่องปัญหาและวิธีแก้ไข (ขยายขนาด Font อ่านง่ายขึ้น) -->
             <div class="space-y-3.5 mb-4">
               <div class="p-3.5 bg-rose-50/60 rounded-xl border border-rose-100">
                 <span class="font-extrabold text-rose-700 block mb-1 flex items-center gap-1.5 text-xs sm:text-base">
@@ -738,12 +753,10 @@
                     <i data-lucide="send" class="w-3.5 h-3.5"></i>
                     <span>ส่ง</span>
                   </button>
-
                   <!-- 🟢 Dropdown แสดงรายชื่อเมื่อพิมพ์ @ -->
                   <div id="mention-dropdown-${r.id}" class="absolute bottom-12 left-0 right-16 bg-white border border-slate-200 rounded-xl shadow-2xl z-20 hidden max-h-40 overflow-y-auto custom-scroll"></div>
                 </div>
               </div>
-
             </div>
           </div>
         `;
