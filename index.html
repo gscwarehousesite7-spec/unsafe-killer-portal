@@ -651,16 +651,38 @@
              </div>`;
 
         // 🟢 เรนเดอร์คอมเมนต์ + แปลง @ชื่อ-นามสกุล ให้เป็นป้ายแท็กสีเขียวแบบเต็มชื่อ
+                // 🟢 เรนเดอร์คอมเมนต์ + แปลง @ชื่อ-นามสกุล เป็นป้ายเขียวชั้นเดียว ไม่ซ้อนกัน
         let commentsListHtml = '';
         commentsThisCase.forEach(c => {
-          let formattedComment = c.comment_text;
+          let text = c.comment_text || '';
           
-          // วนลูปแทนที่ชื่อพนักงานทุกคนให้เป็นแท็กสีเขียวครอบคลุมทั้งชื่อและนามสกุล
+          // ป้องกัน HTML หลุด
+          let safeText = text.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+
+          // ดึงรายชื่อพนักงานมาแทนที่ด้วย Token ชั่วคราวก่อน ป้องกันการซ้อนทับ
           const sortedStaff = [...dynamicStaffList].sort((a, b) => b.length - a.length);
           sortedStaff.forEach(name => {
-            const regex = new RegExp("@" + name, "g");
-            formattedComment = formattedComment.replace(regex, `<span class="mention-tag">@${name}</span>`);
+            if (name && safeText.includes("@" + name)) {
+              safeText = safeText.split("@" + name).join(`___MENTION___${name}___ENDMENTION___`);
+            }
           });
+
+          // เก็บตกกรณีพิมพ์ชื่อจริงเดี่ยวๆ
+          safeText = safeText.replace(/@([^\s<]+)/g, `___MENTION___$1___ENDMENTION___`);
+
+          // แปลงกลับเป็นป้ายสีเขียวรอบเดียวจบ ไม่ซ้อนกันแน่นอน
+          let formattedComment = safeText.replace(/___MENTION___(.*?)___ENDMENTION___/g, '<span class="mention-tag">@$1</span>');
+
+          commentsListHtml += `
+            <div class="p-2.5 bg-slate-50 rounded-xl border border-slate-100 text-xs sm:text-sm flex justify-between items-start gap-2">
+              <div>
+                <span class="font-bold text-slate-800 text-xs sm:text-sm text-emerald-700">${c.user_name}:</span>
+                <span class="text-slate-600 leading-relaxed ml-1">${formattedComment}</span>
+              </div>
+              <button onclick="replyTo('${r.id}', '${c.user_name}')" class="text-[11px] text-emerald-600 hover:underline font-bold whitespace-nowrap">↩️ ตอบกลับ</button>
+            </div>
+          `;
+        });
 
           // สำรองสำหรับกรณีแท็กด้วยชื่อจริงอย่างเดียว
           formattedComment = formattedComment.replace(/@([^\s]+)/g, '<span class="mention-tag">@$1</span>');
