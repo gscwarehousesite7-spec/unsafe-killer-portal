@@ -9,24 +9,27 @@
   <script src="https://unpkg.com/lucide@latest"></script>
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <style>
-    body { font-family: 'Prompt', sans-serif; }
+    body { font-family: 'Prompt', sans-serif; font-size: 15px; } /* 🟢 ขยาย Base Font ขึ้น 1 step */
     .img-card { transition: transform 0.2s ease-in-out; }
     .img-card:hover { transform: scale(1.02); }
     .custom-scroll::-webkit-scrollbar { width: 6px; }
     .custom-scroll::-webkit-scrollbar-track { background: #f1f5f9; border-radius: 8px; }
     .custom-scroll::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 8px; }
     .custom-scroll::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
-    
+
     .gold-rank { border: 2.5px solid #f59e0b; box-shadow: 0 10px 25px -5px rgba(245, 158, 11, 0.25); }
     .silver-rank { border: 2.5px solid #94a3b8; box-shadow: 0 10px 25px -5px rgba(148, 163, 184, 0.25); }
     .bronze-rank { border: 2.5px solid #d97706; box-shadow: 0 10px 25px -5px rgba(217, 119, 6, 0.25); }
+
+    /* 🟢 ป้าย Mention สไตล์สีเขียว SCGC */
+    .mention-tag { color: #047857; font-weight: 700; background-color: #ecfdf5; padding: 2px 6px; border-radius: 6px; border: 1px solid #a7f3d0; }
   </style>
 </head>
 <body class="bg-slate-100 min-h-screen text-slate-800 pb-16 antialiased">
   <!-- Top Decorative Line -->
   <div class="h-1.5 w-full bg-gradient-to-r from-emerald-500 via-teal-600 to-orange-500"></div>
-
-  <!-- 🟢 Top Navbar (ปลด sticky บนมือถือแล้ว เลื่อนตามเนื้อหา ไม่ขวางจอ) -->
+  
+  <!-- 🟢 Top Navbar -->
   <header class="bg-gradient-to-r from-emerald-800 via-teal-800 to-slate-900 text-white shadow-md static sm:sticky sm:top-0 sm:z-30">
     <div class="max-w-7xl mx-auto px-4 py-4 sm:px-6 lg:px-8 flex flex-col md:flex-row justify-between items-center gap-4">
       <div class="flex items-center gap-3 text-center md:text-left flex-col md:flex-row">
@@ -35,15 +38,15 @@
         </div>
         <div>
           <div class="flex items-center justify-center md:justify-start gap-2 flex-wrap">
-            <h1 class="text-xl sm:text-2xl font-extrabold tracking-tight">UNSAFE KILLER REPORT</h1>
-            <span class="bg-amber-500/30 border border-amber-400/50 text-amber-200 text-xs font-semibold px-2.5 py-0.5 rounded-full flex items-center gap-1">
-              <i data-lucide="trophy" class="w-3.5 h-3.5"></i> Popular Vote & Community
+            <h1 class="text-2xl sm:text-3xl font-extrabold tracking-tight">UNSAFE KILLER REPORT</h1>
+            <span class="bg-amber-500/30 border border-amber-400/50 text-amber-200 text-xs sm:text-sm font-semibold px-2.5 py-0.5 rounded-full flex items-center gap-1">
+              <i data-lucide="trophy" class="w-4 h-4"></i> Popular Vote & Community
             </span>
           </div>
-          <p class="text-xs text-emerald-200 mt-0.5">ระบบติดตามผล โหวตชิงรางวัล และคอมเมนต์ความปลอดภัย Site 7</p>
+          <p class="text-xs sm:text-sm text-emerald-200 mt-0.5">ระบบติดตามผล โหวตชิงรางวัล และคอมเมนต์ความปลอดภัย Site 7</p>
         </div>
       </div>
-      <a href="https://docs.google.com/forms/d/e/1FAIpQLSeNtolMsyl3p9KFoM0DiQ5fZcLOrDRxII3IKkEVq_fXdAm8VA/viewform?usp=dialog" target="_blank" rel="noopener noreferrer" class="w-full md:w-auto flex items-center justify-center gap-2 bg-gradient-to-r from-amber-500 to-orange-600 hover:from-amber-600 hover:to-orange-700 text-white px-5 py-2.5 rounded-xl text-sm font-bold transition shadow-md border border-amber-300/40">
+      <a href="https://docs.google.com/forms/d/e/1FAIpQLSeNtolMsyl3p9KFoM0DiQ5fZcLOrDRxII3IKkEVq_fXdAm8VA/viewform?usp=dialog" target="_blank" rel="noopener noreferrer" class="w-full md:w-auto flex items-center justify-center gap-2 bg-gradient-to-r from-amber-500 to-orange-600 hover:from-amber-600 hover:to-orange-700 text-white px-5 py-2.5 rounded-xl text-sm sm:text-base font-bold transition shadow-md border border-amber-300/40">
         <i data-lucide="plus-circle" class="w-4 h-4"></i>
         <span>+ ส่งรายงาน Unsafe Killer</span>
       </a>
@@ -52,7 +55,6 @@
 
   <!-- Main Content -->
   <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-4 sm:mt-5 space-y-4">
-
     <!-- 🏆 กล่อง Safety Popular Vote & โควตาสิทธิ์โหวต -->
     <div class="bg-gradient-to-r from-amber-500 via-amber-600 to-yellow-600 text-white p-4 sm:p-5 rounded-2xl shadow-md flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
       <div class="flex items-center gap-3.5">
@@ -60,17 +62,17 @@
           <i data-lucide="trophy" class="w-7 h-7 text-white"></i>
         </div>
         <div>
-          <h2 class="text-base sm:text-lg font-bold flex items-center gap-2">
+          <h2 class="text-base sm:text-xl font-bold flex items-center gap-2">
             Safety Popular Vote ประจำเดือน
           </h2>
-          <p class="text-xs text-amber-100 mt-0.5">กดปุ่ม 🏆 <b>โหวต</b> ให้เคสที่โดนใจคุณที่สุด (โควตาคนละ 3 เสียง/เดือน)</p>
+          <p class="text-xs sm:text-sm text-amber-100 mt-0.5">กดปุ่ม 🏆 <b>โหวต</b> ให้เคสที่โดนใจคุณที่สุด (โควตาคนละ 3 เสียง/เดือน)</p>
         </div>
       </div>
-      
+
       <!-- โควตาสิทธิ์ที่เหลือ -->
       <div class="bg-slate-900/40 border border-white/20 px-4 py-2 rounded-xl text-xs sm:text-sm font-semibold flex items-center gap-2 self-stretch md:self-auto justify-center">
         <span>สิทธิ์โหวตของคุณ:</span>
-        <span id="vote-quota-badge" class="bg-amber-400 text-slate-950 font-extrabold px-2.5 py-0.5 rounded-md text-xs">3/3 เสียง</span>
+        <span id="vote-quota-badge" class="bg-amber-400 text-slate-950 font-extrabold px-2.5 py-0.5 rounded-md text-xs sm:text-sm">3/3 เสียง</span>
       </div>
     </div>
 
@@ -85,8 +87,8 @@
           <p id="display-username" class="text-sm sm:text-base font-extrabold text-amber-400 mt-0.5">กำลังโหลด...</p>
         </div>
       </div>
-      <button onclick="promptChangeName()" class="flex items-center gap-1.5 bg-slate-700 hover:bg-slate-600 px-3.5 py-1.5 rounded-xl text-xs font-semibold transition border border-slate-600 self-end sm:self-auto">
-        <i data-lucide="edit-3" class="w-3.5 h-3.5 text-emerald-400"></i>
+      <button onclick="promptChangeName()" class="flex items-center gap-1.5 bg-slate-700 hover:bg-slate-600 px-3.5 py-1.5 rounded-xl text-xs sm:text-sm font-semibold transition border border-slate-600 self-end sm:self-auto">
+        <i data-lucide="edit-3" class="w-4 h-4 text-emerald-400"></i>
         <span>แก้ไขชื่อ / ฉายา</span>
       </button>
     </div>
@@ -101,10 +103,9 @@
           <h2 class="text-sm sm:text-base font-bold text-slate-800">
             UNSAFE KILLER <span id="current-month-title" class="text-emerald-700">ประจำเดือน</span>
           </h2>
-          <p class="text-xs text-slate-400">ภาพรวมการแก้ไขและสถิติการมีส่วนร่วม</p>
+          <p class="text-xs sm:text-sm text-slate-400">ภาพรวมการแก้ไขและสถิติการมีส่วนร่วม</p>
         </div>
       </div>
-
       <button id="toggle-chart-btn" onclick="toggleChartSection()" class="flex items-center gap-2 bg-slate-100 hover:bg-slate-200 text-slate-700 px-4 py-2 rounded-xl text-xs sm:text-sm font-semibold transition border border-slate-200">
         <i data-lucide="bar-chart-3" class="w-4 h-4 text-emerald-600"></i>
         <span id="toggle-btn-text">📊 ดูสถิติการมีส่วนร่วม</span>
@@ -121,16 +122,14 @@
           </div>
           <div>
             <h2 class="text-base sm:text-lg font-bold text-slate-800">สถิติการมีส่วนร่วมรายบุคคล (Safety Contributors Leaderboard)</h2>
-            <p class="text-xs text-slate-400">แสดงลำดับพนักงานทุกคนที่มีส่วนร่วมในการชี้บ่งและกำจัดจุดเสี่ยง</p>
+            <p class="text-xs sm:text-sm text-slate-400">แสดงลำดับพนักงานทุกคนที่มีส่วนร่วมในการชี้บ่งและกำจัดจุดเสี่ยง</p>
           </div>
         </div>
-
-        <div class="flex items-center bg-slate-100 p-1 rounded-xl text-xs font-semibold self-start sm:self-auto border border-slate-200">
+        <div class="flex items-center bg-slate-100 p-1 rounded-xl text-xs sm:text-sm font-semibold self-start sm:self-auto border border-slate-200">
           <button id="btn-total" onclick="switchMode('total')" class="px-3.5 py-1.5 rounded-lg bg-emerald-600 text-white shadow-sm transition">ยอดรวมสะสม</button>
           <button id="btn-month" onclick="switchMode('month')" class="px-3.5 py-1.5 rounded-lg text-slate-600 hover:text-slate-900 transition">เฉพาะเดือนนี้</button>
         </div>
       </div>
-
       <div class="relative w-full h-[450px] overflow-y-auto custom-scroll pr-2">
         <div id="chart-wrapper" class="w-full">
           <canvas id="engagementChart"></canvas>
@@ -143,21 +142,21 @@
       <div class="bg-white p-4 rounded-2xl shadow-sm border border-slate-200 flex items-center gap-4">
         <div class="p-3 bg-emerald-50 text-emerald-600 rounded-xl"><i data-lucide="clipboard-list" class="w-6 h-6"></i></div>
         <div>
-          <p class="text-xs text-slate-400 font-bold uppercase tracking-wider">รายการประจำเดือน</p>
+          <p class="text-xs sm:text-sm text-slate-400 font-bold uppercase tracking-wider">รายการประจำเดือน</p>
           <h3 id="stat-total" class="text-2xl sm:text-3xl font-extrabold text-slate-800 mt-0.5">-</h3>
         </div>
       </div>
       <div class="bg-white p-4 rounded-2xl shadow-sm border border-slate-200 flex items-center gap-4">
         <div class="p-3 bg-blue-50 text-blue-600 rounded-xl"><i data-lucide="map-pin" class="w-6 h-6"></i></div>
         <div>
-          <p class="text-xs text-slate-400 font-bold uppercase tracking-wider">พื้นที่ที่มีการแจ้ง</p>
+          <p class="text-xs sm:text-sm text-slate-400 font-bold uppercase tracking-wider">พื้นที่ที่มีการแจ้ง</p>
           <h3 id="stat-locations" class="text-2xl sm:text-3xl font-extrabold text-blue-600 mt-0.5">-</h3>
         </div>
       </div>
       <div class="bg-white p-4 rounded-2xl shadow-sm border border-slate-200 flex items-center gap-4">
         <div class="p-3 bg-purple-50 text-purple-600 rounded-xl"><i data-lucide="users" class="w-6 h-6"></i></div>
         <div>
-          <p class="text-xs text-slate-400 font-bold uppercase tracking-wider">ผู้ร่วมส่งรายงาน</p>
+          <p class="text-xs sm:text-sm text-slate-400 font-bold uppercase tracking-wider">ผู้ร่วมส่งรายงาน</p>
           <h3 id="stat-senders" class="text-2xl sm:text-3xl font-extrabold text-purple-600 mt-0.5">-</h3>
         </div>
       </div>
@@ -166,12 +165,12 @@
     <!-- Search & Location Filter -->
     <div class="bg-white p-4 rounded-2xl shadow-sm border border-slate-200 flex flex-col md:flex-row gap-3 justify-between items-center">
       <div class="relative w-full md:w-96">
-        <i data-lucide="search" class="w-4 h-4 text-slate-400 absolute left-4 top-1/2 -translate-y-1/2"></i>
-        <input type="text" id="search-box" onkeyup="filterCards()" placeholder="ค้นหาชื่อผู้ส่ง, ปัญหา, หรือวิธีแก้..." class="w-full pl-10 pr-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs sm:text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500">
+        <i data-lucide="search" class="w-4.5 h-4.5 text-slate-400 absolute left-4 top-1/2 -translate-y-1/2"></i>
+        <input type="text" id="search-box" onkeyup="filterCards()" placeholder="ค้นหาชื่อผู้ส่ง, ปัญหา, หรือวิธีแก้..." class="w-full pl-11 pr-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs sm:text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500">
       </div>
       <div class="w-full md:w-auto flex flex-col sm:flex-row items-start sm:items-center gap-2">
         <span class="text-xs sm:text-sm text-slate-500 whitespace-nowrap font-bold">กรองตามพื้นที่:</span>
-        <select id="location-filter" onchange="filterCards()" class="bg-slate-50 border border-slate-200 rounded-xl px-3 py-2.5 text-xs sm:text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 w-full md:w-56">
+        <select id="location-filter" onchange="filterCards()" class="bg-slate-50 border border-slate-200 rounded-xl px-3 py-2.5 text-xs sm:text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 w-full md:w-56 font-medium">
           <option value="ALL">ทั้งหมดทุกพื้นที่</option>
         </select>
       </div>
@@ -206,7 +205,7 @@
       </div>
       <div id="users-list-content" class="max-h-60 overflow-y-auto custom-scroll space-y-2 text-xs sm:text-sm text-slate-600">
       </div>
-      <button onclick="closeUsersModal()" class="w-full py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-semibold rounded-xl transition">ปิดหน้าต่าง</button>
+      <button onclick="closeUsersModal()" class="w-full py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs sm:text-sm font-semibold rounded-xl transition">ปิดหน้าต่าง</button>
     </div>
   </div>
 
@@ -221,17 +220,16 @@
   <script>
     const SUPABASE_URL = "https://skkhfmxnfikjokczcevq.supabase.co";
     const SUPABASE_KEY = "sb_publishable_f4GFHEEhvJjBS2RwCx0ZLA_gKpvQGUo";
-
+    
     let allReports = [];
     let engagementData = [];
+    let dynamicStaffList = []; // 🟢 รายชื่อพนักงานอัตโนมัติสำหรับ @mention
     let myChart = null;
     let currentMode = 'total';
     let isChartVisible = false;
-
     let allLikesData = [];
     let allVotesData = [];
     let allCommentsData = [];
-
     let userLikedCaseIds = new Set();
     let userVotedCaseIds = new Set();
     const MAX_VOTES = 3;
@@ -241,7 +239,6 @@
       userToken = 'user_' + Math.random().toString(36).substring(2, 15);
       localStorage.setItem('unsafe_user_token', userToken);
     }
-
     let currentUserName = localStorage.getItem('unsafe_user_name');
     if (!currentUserName) {
       currentUserName = "ชาว Site 7 (" + userToken.substring(5, 9) + ")";
@@ -252,7 +249,6 @@
       "มกราคม", "กุมภาพันธ์", "มีนาคม", "เมษายน", "พฤษภาคม", "มิถุนายน",
       "กรกฎาคม", "สิงหาคม", "กันยายน", "ตุลาคม", "พฤศจิกายน", "ธันวาคม"
     ];
-
     const currentMonthKey = new Date().getFullYear() + "_" + (new Date().getMonth() + 1);
 
     window.onload = function() {
@@ -288,24 +284,41 @@
       document.getElementById('loading').classList.remove('hidden');
       document.getElementById('cards-container').classList.add('hidden');
       document.getElementById('no-data').classList.add('hidden');
-
       try {
         const resDashboard = await fetch(`${SUPABASE_URL}/rest/v1/dashboard_cache?id=eq.latest&select=data`, {
           headers: { 'apikey': SUPABASE_KEY, 'Authorization': `Bearer ${SUPABASE_KEY}` }
         });
         const dashResult = await resDashboard.json();
-        
+
         if (dashResult && dashResult.length > 0) {
           const payload = dashResult[0].data;
           allReports = payload.reports || [];
           engagementData = payload.engagement || [];
         }
 
+        // 🟢 ดึงรายชื่อพนักงานจากรายงาน & Leaderboard อัตโนมัติ
+        extractStaffNames();
+
         await fetchSocialAndVoteData();
         onDataLoaded();
       } catch (err) {
         console.error(err);
         document.getElementById('loading').classList.add('hidden');
+      }
+    }
+
+    // 🟢 ฟังก์ชันคัดแยกรายชื่อพนักงานจากฐานข้อมูลอัตโนมัติ
+    function extractStaffNames() {
+      const staffSet = new Set();
+      if (engagementData && engagementData.length > 0) {
+        engagementData.forEach(d => { if (d.name) staffSet.add(d.name.trim()); });
+      }
+      if (allReports && allReports.length > 0) {
+        allReports.forEach(r => { if (r.sender && r.sender !== "ไม่ระบุชื่อ") staffSet.add(r.sender.trim()); });
+      }
+      dynamicStaffList = Array.from(staffSet);
+      if (dynamicStaffList.length === 0) {
+        dynamicStaffList = ["อัครพล ดิษฐการ", "ปิยวัฒน์ เจริญใจ", "ณัฐนันท์ อินทร์กรุด", "จิรโรจน์ พงศ์พิจิตร์", "ภัทรดนย์ ชลวิหาร", "สุริยา โพธิสาร"];
       }
     }
 
@@ -340,9 +353,9 @@
       if (badge) {
         badge.innerText = `${remaining}/${MAX_VOTES} เสียง`;
         if (remaining === 0) {
-          badge.className = "bg-rose-500 text-white font-extrabold px-2.5 py-0.5 rounded-md text-xs";
+          badge.className = "bg-rose-500 text-white font-extrabold px-2.5 py-0.5 rounded-md text-xs sm:text-sm";
         } else {
-          badge.className = "bg-amber-400 text-slate-950 font-extrabold px-2.5 py-0.5 rounded-md text-xs";
+          badge.className = "bg-amber-400 text-slate-950 font-extrabold px-2.5 py-0.5 rounded-md text-xs sm:text-sm";
         }
       }
     }
@@ -350,12 +363,10 @@
     async function toggleLike(caseId) {
       caseId = caseId.toString();
       const isLiked = userLikedCaseIds.has(caseId);
-
       if (isLiked) {
         userLikedCaseIds.delete(caseId);
         allLikesData = allLikesData.filter(l => !(l.case_id === caseId && l.user_token === userToken));
         renderCards(allReports);
-
         await fetch(`${SUPABASE_URL}/rest/v1/case_likes?case_id=eq.${caseId}&month=eq.${currentMonthKey}&user_token=eq.${userToken}`, {
           method: 'DELETE',
           headers: { 'apikey': SUPABASE_KEY, 'Authorization': `Bearer ${SUPABASE_KEY}` }
@@ -369,7 +380,6 @@
           user_token: userToken
         });
         renderCards(allReports);
-
         await fetch(`${SUPABASE_URL}/rest/v1/case_likes`, {
           method: 'POST',
           headers: { 'apikey': SUPABASE_KEY, 'Authorization': `Bearer ${SUPABASE_KEY}`, 'Content-Type': 'application/json' },
@@ -381,18 +391,15 @@
     async function toggleVote(caseId) {
       caseId = caseId.toString();
       const isVoted = userVotedCaseIds.has(caseId);
-
       if (!isVoted && userVotedCaseIds.size >= MAX_VOTES) {
         alert("คุณใช้สิทธิ์โหวตครบ 3 เสียงของเดือนนี้แล้วครับ! 🎉\n(สามารถกดปุ่มเดิมที่เคยโหวตเพื่อยกเลิกแล้วเปลี่ยนไปโหวตเคสอื่นได้ครับ)");
         return;
       }
-
       if (isVoted) {
         userVotedCaseIds.delete(caseId);
         allVotesData = allVotesData.filter(v => !(v.case_id === caseId && v.user_token === userToken));
         updateVoteQuotaUI();
         renderCards(allReports);
-
         await fetch(`${SUPABASE_URL}/rest/v1/case_votes?case_id=eq.${caseId}&month=eq.${currentMonthKey}&user_token=eq.${userToken}`, {
           method: 'DELETE',
           headers: { 'apikey': SUPABASE_KEY, 'Authorization': `Bearer ${SUPABASE_KEY}` }
@@ -407,7 +414,6 @@
         });
         updateVoteQuotaUI();
         renderCards(allReports);
-
         await fetch(`${SUPABASE_URL}/rest/v1/case_votes`, {
           method: 'POST',
           headers: { 'apikey': SUPABASE_KEY, 'Authorization': `Bearer ${SUPABASE_KEY}`, 'Content-Type': 'application/json' },
@@ -421,7 +427,6 @@
       const titleEl = document.getElementById('users-modal-title');
       const container = document.getElementById('users-list-content');
       container.innerHTML = '';
-
       let list = [];
       if (type === 'like') {
         titleEl.innerHTML = '<i data-lucide="heart" class="w-4 h-4 text-rose-500 fill-rose-500"></i> รายชื่อคนที่กดถูกใจ (Likes)';
@@ -430,7 +435,6 @@
         titleEl.innerHTML = '<i data-lucide="trophy" class="w-4 h-4 text-amber-500"></i> รายชื่อคนที่กดโหวต (Votes)';
         list = allVotesData.filter(v => v.case_id === caseId);
       }
-
       if (list.length === 0) {
         container.innerHTML = `<p class="text-center text-slate-400 py-4">ยังไม่มีใครกด${type === 'like' ? 'ถูกใจ' : 'โหวต'}เคสนี้</p>`;
       } else {
@@ -444,7 +448,6 @@
           container.appendChild(div);
         });
       }
-
       document.getElementById('users-modal').classList.remove('hidden');
       lucide.createIcons();
     }
@@ -458,6 +461,7 @@
       if (box) box.classList.toggle('hidden');
     }
 
+    // 🟢 ระบบส่งคอมเมนต์ขึ้น Supabase
     async function submitComment(caseId) {
       const input = document.getElementById(`input-comment-${caseId}`);
       const text = input.value.trim();
@@ -472,8 +476,12 @@
 
       allCommentsData.push(newComment);
       input.value = '';
-      renderCards(allReports);
       
+      const dropdown = document.getElementById(`mention-dropdown-${caseId}`);
+      if (dropdown) dropdown.classList.add('hidden');
+
+      renderCards(allReports);
+
       const box = document.getElementById(`comment-box-${caseId}`);
       if (box) box.classList.remove('hidden');
 
@@ -482,6 +490,39 @@
         headers: { 'apikey': SUPABASE_KEY, 'Authorization': `Bearer ${SUPABASE_KEY}`, 'Content-Type': 'application/json' },
         body: JSON.stringify({ case_id: caseId.toString(), user_name: currentUserName, comment_text: text })
       });
+    }
+
+    // 🟢 ระบบพิมพ์ @ เพื่อค้นหาและเลือกแท็กชื่อเพื่อน
+    function handleMention(event, caseId) {
+      const input = document.getElementById(`input-comment-${caseId}`);
+      const dropdown = document.getElementById(`mention-dropdown-${caseId}`);
+      const val = input.value;
+      const lastAt = val.lastIndexOf("@");
+
+      if (lastAt !== -1 && lastAt === val.length - 1) {
+        dropdown.innerHTML = "";
+        dynamicStaffList.forEach(name => {
+          const item = document.createElement("div");
+          item.className = "p-2 hover:bg-emerald-50 cursor-pointer text-xs sm:text-sm font-bold text-slate-700 border-b border-slate-50 flex items-center gap-1.5 transition";
+          item.innerHTML = `<span class="w-4 h-4 rounded-full bg-emerald-100 text-emerald-700 flex items-center justify-center text-[10px]">@</span> ${name}`;
+          item.onclick = function() {
+            input.value = val.substring(0, lastAt) + "@" + name + " ";
+            dropdown.classList.add("hidden");
+            input.focus();
+          };
+          dropdown.appendChild(item);
+        });
+        dropdown.classList.remove("hidden");
+      } else if (!val.includes("@")) {
+        dropdown.classList.add("hidden");
+      }
+    }
+
+    // 🟢 ฟังก์ชันกดปุ่ม "ตอบกลับ" (ใส่ @ชื่อรอไว้ในช่องพิมพ์)
+    function replyTo(caseId, authorName) {
+      const input = document.getElementById(`input-comment-${caseId}`);
+      input.value = `@${authorName} `;
+      input.focus();
     }
 
     function onDataLoaded() {
@@ -495,7 +536,6 @@
       const container = document.getElementById('cards-container');
       const noData = document.getElementById('no-data');
       container.innerHTML = '';
-
       if (!reports || reports.length === 0) {
         container.classList.add('hidden');
         noData.classList.remove('hidden');
@@ -527,32 +567,29 @@
         const cId = r.id.toString();
         const voteCount = voteCountsMap[cId] || 0;
         const likeCount = likeCountsMap[cId] || 0;
-
         const isVoted = userVotedCaseIds.has(cId);
         const isLiked = userLikedCaseIds.has(cId);
-
         const commentsThisCase = allCommentsData.filter(c => c.case_id === cId);
 
         let rankBadgeHtml = '';
         let rankCardClass = 'border-slate-200';
-
         if (voteCount > 0) {
           if (cId === rank1_Id) {
             rankCardClass = 'gold-rank';
             rankBadgeHtml = `
-              <div class="bg-gradient-to-r from-amber-500 via-amber-600 to-yellow-500 text-white text-[11px] font-extrabold px-3 py-1 flex items-center justify-center gap-1.5 shadow-sm">
+              <div class="bg-gradient-to-r from-amber-500 via-amber-600 to-yellow-500 text-white text-xs sm:text-sm font-extrabold px-3 py-1.5 flex items-center justify-center gap-1.5 shadow-sm">
                 <i data-lucide="crown" class="w-4 h-4"></i> 🥇 อันดับ 1 Popular Vote (${voteCount} โหวต)
               </div>`;
           } else if (cId === rank2_Id) {
             rankCardClass = 'silver-rank';
             rankBadgeHtml = `
-              <div class="bg-gradient-to-r from-slate-400 via-slate-500 to-slate-400 text-white text-[11px] font-extrabold px-3 py-1 flex items-center justify-center gap-1.5 shadow-sm">
+              <div class="bg-gradient-to-r from-slate-400 via-slate-500 to-slate-400 text-white text-xs sm:text-sm font-extrabold px-3 py-1.5 flex items-center justify-center gap-1.5 shadow-sm">
                 <i data-lucide="award" class="w-4 h-4"></i> 🥈 อันดับ 2 Popular Vote (${voteCount} โหวต)
               </div>`;
           } else if (cId === rank3_Id) {
             rankCardClass = 'bronze-rank';
             rankBadgeHtml = `
-              <div class="bg-gradient-to-r from-amber-700 via-amber-800 to-orange-800 text-white text-[11px] font-extrabold px-3 py-1 flex items-center justify-center gap-1.5 shadow-sm">
+              <div class="bg-gradient-to-r from-amber-700 via-amber-800 to-orange-800 text-white text-xs sm:text-sm font-extrabold px-3 py-1.5 flex items-center justify-center gap-1.5 shadow-sm">
                 <i data-lucide="medal" class="w-4 h-4"></i> 🥉 อันดับ 3 Popular Vote (${voteCount} โหวต)
               </div>`;
           }
@@ -564,7 +601,7 @@
         const beforeImgHtml = r.beforeImg
           ? `<div class="relative group cursor-pointer" onclick="openModal('${r.beforeImg}')">
                <img src="${r.beforeImg}" loading="lazy" class="w-full h-44 object-cover rounded-xl bg-slate-100 border border-slate-200 img-card">
-               <span class="absolute top-2 left-2 bg-rose-600/90 text-white text-[10px] font-semibold px-2 py-0.5 rounded-md shadow">ก่อนแก้ไข</span>
+               <span class="absolute top-2 left-2 bg-rose-600/90 text-white text-[11px] sm:text-xs font-semibold px-2.5 py-0.5 rounded-md shadow">ก่อนแก้ไข</span>
                <div class="absolute inset-0 bg-black/20 opacity-0 group-hover:opacity-100 rounded-xl flex items-center justify-center transition"><i data-lucide="zoom-in" class="w-5 h-5 text-white"></i></div>
              </div>`
           : `<div class="w-full h-44 bg-slate-100 rounded-xl border border-dashed border-slate-300 flex flex-col items-center justify-center text-slate-400 text-xs gap-1">
@@ -574,30 +611,34 @@
         const afterImgHtml = r.afterImg
           ? `<div class="relative group cursor-pointer" onclick="openModal('${r.afterImg}')">
                <img src="${r.afterImg}" loading="lazy" class="w-full h-44 object-cover rounded-xl bg-slate-100 border border-slate-200 img-card">
-               <span class="absolute top-2 left-2 bg-emerald-600/90 text-white text-[10px] font-semibold px-2 py-0.5 rounded-md shadow">หลังแก้ไข</span>
+               <span class="absolute top-2 left-2 bg-emerald-600/90 text-white text-[11px] sm:text-xs font-semibold px-2.5 py-0.5 rounded-md shadow">หลังแก้ไข</span>
                <div class="absolute inset-0 bg-black/20 opacity-0 group-hover:opacity-100 rounded-xl flex items-center justify-center transition"><i data-lucide="zoom-in" class="w-5 h-5 text-white"></i></div>
              </div>`
           : `<div class="w-full h-44 bg-slate-100 rounded-xl border border-dashed border-slate-300 flex flex-col items-center justify-center text-slate-400 text-xs gap-1">
                <i data-lucide="image-off" class="w-6 h-6"></i><span>ไม่มีรูปหลังแก้ไข</span>
              </div>`;
 
+        // 🟢 เรนเดอร์คอมเมนต์ + แปลง @ชื่อ ให้เป็นแท็กสีเขียว + ปุ่มตอบกลับ
         let commentsListHtml = '';
         commentsThisCase.forEach(c => {
+          const formattedComment = c.comment_text.replace(/@([^\s]+)/g, '<span class="mention-tag">@$1</span>');
           commentsListHtml += `
-            <div class="p-2.5 bg-slate-50 rounded-xl border border-slate-100 text-xs space-y-0.5">
-              <span class="font-bold text-slate-800 text-[11px] text-emerald-700">${c.user_name}</span>
-              <p class="text-slate-600 leading-relaxed">${c.comment_text}</p>
+            <div class="p-2.5 bg-slate-50 rounded-xl border border-slate-100 text-xs sm:text-sm flex justify-between items-start gap-2">
+              <div>
+                <span class="font-bold text-slate-800 text-xs sm:text-sm text-emerald-700">${c.user_name}:</span>
+                <span class="text-slate-600 leading-relaxed ml-1">${formattedComment}</span>
+              </div>
+              <button onclick="replyTo('${r.id}', '${c.user_name}')" class="text-[11px] text-emerald-600 hover:underline font-bold whitespace-nowrap">↩️ ตอบกลับ</button>
             </div>
           `;
         });
 
         card.innerHTML = `
           ${rankBadgeHtml}
-
           <div class="p-4 sm:p-5 flex-1">
             <div class="flex items-start justify-between gap-2 mb-3 pb-3 border-b border-slate-100">
               <div class="flex items-center gap-3">
-                <div class="w-10 h-10 rounded-full bg-emerald-100 text-emerald-700 flex items-center justify-center font-extrabold text-sm">
+                <div class="w-10 h-10 rounded-full bg-emerald-100 text-emerald-700 flex items-center justify-center font-extrabold text-sm sm:text-base">
                   ${r.sender.charAt(0)}
                 </div>
                 <div>
@@ -611,19 +652,19 @@
                 #เคสที่ ${r.id}
               </span>
             </div>
-
+            
             <div class="space-y-3.5 mb-4">
               <div class="p-3.5 bg-rose-50/60 rounded-xl border border-rose-100">
-                <span class="font-extrabold text-rose-700 block mb-1 flex items-center gap-1.5 text-xs sm:text-sm">
+                <span class="font-extrabold text-rose-700 block mb-1 flex items-center gap-1.5 text-xs sm:text-base">
                   <i data-lucide="alert-triangle" class="w-4 h-4"></i> ปัญหาที่พบ:
                 </span>
-                <p class="text-xs sm:text-sm text-slate-700 leading-relaxed font-normal">${r.problem}</p>
+                <p class="text-xs sm:text-base text-slate-700 leading-relaxed font-normal">${r.problem}</p>
               </div>
               <div class="p-3.5 bg-emerald-50/60 rounded-xl border border-emerald-100">
-                <span class="font-extrabold text-emerald-700 block mb-1 flex items-center gap-1.5 text-xs sm:text-sm">
+                <span class="font-extrabold text-emerald-700 block mb-1 flex items-center gap-1.5 text-xs sm:text-base">
                   <i data-lucide="check-circle" class="w-4 h-4"></i> วิธีการแก้ไข:
                 </span>
-                <p class="text-xs sm:text-sm text-slate-700 leading-relaxed font-normal">${r.fixMethod}</p>
+                <p class="text-xs sm:text-base text-slate-700 leading-relaxed font-normal">${r.fixMethod}</p>
               </div>
             </div>
 
@@ -634,47 +675,47 @@
 
             <div class="mt-4 pt-3 border-t border-slate-100 space-y-2.5">
               <div class="flex items-center justify-between gap-2 flex-wrap">
-                
                 <div class="flex items-center gap-2">
-                  <button onclick="toggleLike('${r.id}')" class="flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-bold transition ${isLiked ? 'bg-rose-500 text-white shadow-sm' : 'bg-slate-100 text-slate-600 hover:bg-rose-50 hover:text-rose-600'}">
-                    <i data-lucide="heart" class="w-3.5 h-3.5 ${isLiked ? 'fill-white' : ''}"></i>
+                  <button onclick="toggleLike('${r.id}')" class="flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs sm:text-sm font-bold transition ${isLiked ? 'bg-rose-500 text-white shadow-sm' : 'bg-slate-100 text-slate-600 hover:bg-rose-50 hover:text-rose-600'}">
+                    <i data-lucide="heart" class="w-4 h-4 ${isLiked ? 'fill-white' : ''}"></i>
                     <span>${isLiked ? 'ถูกใจแล้ว' : 'ถูกใจ'}</span>
                   </button>
-                  <button onclick="openUsersModal('${r.id}', 'like')" class="text-xs text-slate-500 hover:text-rose-600 font-semibold underline underline-offset-2">
+                  <button onclick="openUsersModal('${r.id}', 'like')" class="text-xs sm:text-sm text-slate-500 hover:text-rose-600 font-semibold underline underline-offset-2">
                     ${likeCount}
                   </button>
-
                   <span class="text-slate-300">|</span>
-
-                  <button onclick="toggleVote('${r.id}')" class="flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-bold transition ${isVoted ? 'bg-amber-500 text-white shadow-sm' : 'bg-amber-50 text-amber-800 hover:bg-amber-100 border border-amber-200'}">
-                    <i data-lucide="trophy" class="w-3.5 h-3.5"></i>
+                  <button onclick="toggleVote('${r.id}')" class="flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs sm:text-sm font-bold transition ${isVoted ? 'bg-amber-500 text-white shadow-sm' : 'bg-amber-50 text-amber-800 hover:bg-amber-100 border border-amber-200'}">
+                    <i data-lucide="trophy" class="w-4 h-4"></i>
                     <span>${isVoted ? 'โหวตแล้ว' : 'โหวตชิงรางวัล'}</span>
                   </button>
-                  <button onclick="openUsersModal('${r.id}', 'vote')" class="text-xs text-amber-700 hover:text-amber-900 font-semibold underline underline-offset-2">
+                  <button onclick="openUsersModal('${r.id}', 'vote')" class="text-xs sm:text-sm text-amber-700 hover:text-amber-900 font-semibold underline underline-offset-2">
                     ${voteCount} เสียง
                   </button>
                 </div>
-
-                <button onclick="toggleCommentBox('${r.id}')" class="flex items-center gap-1 px-3 py-1.5 rounded-xl text-xs font-semibold bg-slate-100 hover:bg-slate-200 text-slate-700 transition">
-                  <i data-lucide="message-circle" class="w-3.5 h-3.5 text-emerald-600"></i>
+                <button onclick="toggleCommentBox('${r.id}')" class="flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs sm:text-sm font-semibold bg-slate-100 hover:bg-slate-200 text-slate-700 transition">
+                  <i data-lucide="message-circle" class="w-4 h-4 text-emerald-600"></i>
                   <span>คอมเมนต์ (${commentsThisCase.length})</span>
                 </button>
               </div>
 
+              <!-- กล่องคอมเมนต์ + Autocomplete แท็กชื่อ -->
               <div id="comment-box-${r.id}" class="hidden pt-2 space-y-2">
                 <div class="space-y-1.5 max-h-36 overflow-y-auto custom-scroll pr-1">
-                  ${commentsListHtml || '<p class="text-[11px] text-slate-400 italic">ยังไม่มีคอมเมนต์ มาร่วมแซวหรือให้กำลังใจเป็นคนแรกสิ!</p>'}
+                  ${commentsListHtml || '<p class="text-xs text-slate-400 italic">ยังไม่มีคอมเมนต์ พิมพ์ @ เพื่อแท็กเพื่อนมาร่วมแซวหรือให้กำลังใจสิ!</p>'}
                 </div>
-                <div class="flex gap-2">
-                  <input type="text" id="input-comment-${r.id}" onkeypress="if(event.key==='Enter') submitComment('${r.id}')" placeholder="พิมพ์คอมเมนต์แซวหรือชื่นชม..." class="flex-1 pl-3 pr-2 py-1.5 bg-slate-50 border border-slate-200 rounded-xl text-xs focus:outline-none focus:ring-2 focus:ring-emerald-500">
-                  <button onclick="submitComment('${r.id}')" class="bg-emerald-600 hover:bg-emerald-700 text-white px-3 py-1.5 rounded-xl text-xs font-bold transition flex items-center gap-1">
-                    <i data-lucide="send" class="w-3 h-3"></i>
+                <div class="relative flex gap-2">
+                  <input type="text" id="input-comment-${r.id}" onkeyup="handleMention(event, '${r.id}')" onkeypress="if(event.key==='Enter') submitComment('${r.id}')" placeholder="พิมพ์คอมเมนต์ หรือพิมพ์ @ เพื่อแท็กเพื่อน..." class="flex-1 pl-3.5 pr-2 py-2 bg-slate-50 border border-slate-200 rounded-xl text-xs sm:text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500">
+                  <button onclick="submitComment('${r.id}')" class="bg-emerald-600 hover:bg-emerald-700 text-white px-4 py-2 rounded-xl text-xs sm:text-sm font-bold transition flex items-center gap-1">
+                    <i data-lucide="send" class="w-3.5 h-3.5"></i>
                     <span>ส่ง</span>
                   </button>
+
+                  <!-- 🟢 Dropdown แสดงรายชื่อเมื่อพิมพ์ @ -->
+                  <div id="mention-dropdown-${r.id}" class="absolute bottom-12 left-0 right-16 bg-white border border-slate-200 rounded-xl shadow-2xl z-20 hidden max-h-40 overflow-y-auto custom-scroll"></div>
                 </div>
               </div>
-            </div>
 
+            </div>
           </div>
         `;
         container.appendChild(card);
@@ -686,9 +727,7 @@
       const section = document.getElementById('chart-section');
       const btnText = document.getElementById('toggle-btn-text');
       const icon = document.getElementById('toggle-icon');
-
       isChartVisible = !isChartVisible;
-
       if (isChartVisible) {
         section.classList.remove('hidden');
         btnText.innerText = "❌ ซ่อนสถิติการมีส่วนร่วม";
@@ -703,21 +742,16 @@
 
     function renderChart() {
       if (!engagementData || engagementData.length === 0) return;
-
       let sorted = [...engagementData].sort((a, b) => {
         return currentMode === 'total' ? (b.total - a.total) : (b.thisMonth - a.thisMonth);
       });
-
       let labels = sorted.map(d => d.name);
       let values = sorted.map(d => currentMode === 'total' ? d.total : d.thisMonth);
-
       const chartWrapper = document.getElementById('chart-wrapper');
       const dynamicHeight = Math.max(450, labels.length * 28);
       chartWrapper.style.height = dynamicHeight + "px";
-
       const ctx = document.getElementById('engagementChart').getContext('2d');
       if (myChart) myChart.destroy();
-
       myChart = new Chart(ctx, {
         type: 'bar',
         data: {
@@ -740,7 +774,7 @@
             legend: { display: false },
             tooltip: {
               callbacks: {
-                label: (c) => ` ${c.parsed.x} ครั้ง`
+                label: (c) => `${c.parsed.x} ครั้ง`
               }
             }
           },
